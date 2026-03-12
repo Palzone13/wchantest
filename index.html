@@ -371,10 +371,12 @@ a:hover { color: #dd0000; }
 </div>
 
 <script>
-var threadIdCounter = 56200;
-var postIdCounter = 882000;
+var SUPABASE_URL = 'https://actpttkngkmjmzhukxva.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_c7jHjcNicXKabcFPCzKjyA_ViTc0-ti';
+
 var currentBoard = 'all';
 var currentSort = 'bump';
+var threads = [];
 
 var boardNames = {
   b: '/b/ - Random',
@@ -386,8 +388,72 @@ var boardNames = {
   fit: '/fit/ - Fitness'
 };
 
-var threads = [];
+// ── SUPABASE HELPERS ────────────────────────────────────────────────────────
+async function sbGet(path) {
+  var r = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  });
+  return r.json();
+}
 
+async function sbPost(table, body) {
+  var r = await fetch(SUPABASE_URL + '/rest/v1/' + table, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(body)
+  });
+  var data = await r.json();
+  return Array.isArray(data) ? data[0] : data;
+}
+
+async function sbPatch(table, id, body) {
+  await fetch(SUPABASE_URL + '/rest/v1/' + table + '?id=eq.' + id, {
+    method: 'PATCH',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+}
+
+// ── LOAD ────────────────────────────────────────────────────────────────────
+async function loadAll() {
+  var feed = document.getElementById('thread-feed');
+  feed.innerHTML = '<i style="color:#888;font-size:12px">loading...</i>';
+
+  var rawThreads = await sbGet('threads?order=bump.desc');
+  var rawReplies = await sbGet('replies?order=created_at.asc');
+
+  threads = rawThreads.map(function(t) {
+    return {
+      id: t.id,
+      board: t.board,
+      subject: t.subject,
+      body: t.body,
+      name: t.name || 'Anonymous',
+      time: new Date(t.created_at).getTime(),
+      bump: t.bump || new Date(t.created_at).getTime(),
+      replies: rawReplies.filter(function(r){ return r.thread_id === t.id; }).map(function(r){
+        return { id: r.id, name: r.name || 'Anonymous', body: r.body, time: new Date(r.created_at).getTime() };
+      })
+    };
+  });
+
+  renderFeed();
+
+  var total = threads.reduce(function(n,t){ return n + t.replies.length; }, 0) + threads.length;
+  document.getElementById('stat-posts').textContent = total.toLocaleString();
+  document.getElementById('stat-threads').textContent = threads.length.toLocaleString();
+}
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
 function fmtTime(ts) {
   var d = new Date(ts);
   var mo = d.getMonth()+1, dy = d.getDate(), yr = String(d.getFullYear()).slice(-2);
@@ -421,7 +487,12 @@ function getSortedThreads() {
 function renderFeed() {
   var feed = document.getElementById('thread-feed');
   feed.innerHTML = '';
-  getSortedThreads().forEach(function(t){ feed.appendChild(buildThread(t)); });
+  var list = getSortedThreads();
+  if (list.length === 0) {
+    feed.innerHTML = '<div style="color:#888;font-size:12px;padding:10px 0">no threads yet.</div>';
+  } else {
+    list.forEach(function(t){ feed.appendChild(buildThread(t)); });
+  }
   document.getElementById('board-title-text').textContent =
     currentBoard === 'all' ? '/all/ \u2014 All Boards' : boardNames[currentBoard];
 }
@@ -473,6 +544,7 @@ function buildThread(t) {
   return div;
 }
 
+// ── INTERACTIONS ─────────────────────────────────────────────────────────────
 function toggleReplies(id) {
   var sec = document.getElementById('replies-'+id);
   var row = document.getElementById('replyrow-'+id);
@@ -492,21 +564,34 @@ function quotePost(threadId, postId) {
   inp.focus();
 }
 
-function submitReply(id) {
+async function submitReply(id) {
   var inp = document.getElementById('reply-input-'+id);
   var text = inp.value.trim();
   if (!text) return;
+
+  var btn = inp.nextElementSibling;
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  var name = 'Anonymous';
+  var saved = await sbPost('replies', { thread_id: id, body: text, name: name });
+
+  // bump thread
+  await sbPatch('threads', id, { bump: Date.now() });
+
   var t = threads.find(function(x){ return x.id===id; });
-  var reply = { id: ++postIdCounter, name: 'Anonymous', time: Date.now(), body: text };
+  var reply = { id: saved.id, name: name, body: text, time: new Date(saved.created_at).getTime() };
   t.replies.push(reply);
   t.bump = Date.now();
   inp.value = '';
+  btn.disabled = false;
+  btn.textContent = 'Post';
 
   var list = document.getElementById('replies-'+id);
   var tmp = document.createElement('div');
   tmp.innerHTML = '<div class="reply-post" id="post-'+reply.id+'">'
     +'<div class="post-header">'
-    +'<span class="post-name">Anonymous</span> '
+    +'<span class="post-name">'+escHtml(name)+'</span> '
     +'<span class="post-time">'+fmtTime(reply.time)+'</span> '
     +'<span class="post-no">No.<a onclick="quotePost('+id+','+reply.id+')">'+reply.id+'</a></span>'
     +'</div>'
@@ -516,9 +601,6 @@ function submitReply(id) {
 
   var rc = document.getElementById('rc-'+id);
   if (rc) rc.textContent = t.replies.length+' repl'+(t.replies.length===1?'y':'ies');
-
-  var sp = document.getElementById('stat-posts');
-  sp.textContent = (parseInt(sp.textContent.replace(/,/g,''))+1).toLocaleString();
 }
 
 function filterBoard(board) {
@@ -540,21 +622,33 @@ function toggleForm() {
   if (f.classList.contains('open')) document.getElementById('new-title').focus();
 }
 
-function submitThread() {
-  var title = document.getElementById('new-title').value.trim();
+async function submitThread() {
+  var subject = document.getElementById('new-title').value.trim();
   var body = document.getElementById('new-content').value.trim();
   var board = document.getElementById('new-board').value;
   var name = document.getElementById('new-name').value.trim() || 'Anonymous';
-  if (!title || !body) { alert('Subject and comment required.'); return; }
+  if (!subject || !body) { alert('Subject and comment required.'); return; }
 
-  var t = { id: ++threadIdCounter, board: board, subject: title, body: body, name: name, time: Date.now(), bump: Date.now(), replies: [] };
+  var btn = document.querySelector('#postform-wrap .submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Posting...';
+
+  var saved = await sbPost('threads', { board: board, subject: subject, body: body, name: name, bump: Date.now() });
+
+  var t = {
+    id: saved.id, board: board, subject: subject, body: body,
+    name: name, time: new Date(saved.created_at).getTime(),
+    bump: saved.bump, replies: []
+  };
   threads.unshift(t);
   renderFeed();
+
   ['new-title','new-content','new-name'].forEach(function(x){ document.getElementById(x).value=''; });
   document.getElementById('postform-wrap').classList.remove('open');
+  btn.disabled = false;
+  btn.textContent = 'Submit';
 
-  var st = document.getElementById('stat-threads');
-  st.textContent = (parseInt(st.textContent.replace(/,/g,''))+1).toLocaleString();
+  document.getElementById('stat-threads').textContent = threads.length.toLocaleString();
 
   setTimeout(function(){
     var el = document.getElementById('thread-'+t.id);
@@ -576,7 +670,7 @@ setInterval(function() {
   el.textContent = cur + Math.floor(Math.random()*5) - 2;
 }, 9000);
 
-renderFeed();
+loadAll();
 </script>
 </body>
 </html>

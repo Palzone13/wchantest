@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wchan - imageboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #d9d9c3;
+  color: #000;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+
+a { color: #34345c; text-decoration: underline; cursor: pointer; }
+a:hover { color: #dd0000; }
+
+#topbar {
+  background: #800000;
+  color: #fff;
+  text-align: center;
+  padding: 2px 0;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+#header {
+  background: #ffffee;
+  border-bottom: 3px solid #800000;
+  text-align: center;
+  padding: 10px 4px 6px;
+}
+
+#header h1 {
+  font-family: "Times New Roman", serif;
+  font-size: 36px;
+  color: #800000;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0 #ccc;
+  line-height: 1;
+}
+
+#header .tagline {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+#boardnav {
+  background: #ffffee;
+  border-bottom: 1px solid #800000;
+  padding: 4px 8px;
+  font-size: 12px;
+  text-align: center;
+}
+
+#boardnav span { margin: 0 2px; }
+
+#boardnav a {
+  color: #34345c;
+  font-weight: bold;
+  padding: 1px 4px;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+#boardnav a:hover, #boardnav a.active {
+  background: #800000;
+  color: #fff;
+  border-color: #600;
+  text-decoration: none;
+}
+
+#wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 8px 4px;
+}
+
+.board-title-bar {
+  background: #800000;
+  color: #fff;
+  padding: 3px 8px;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.board-title-bar a {
+  color: #ffdddd;
+  font-size: 11px;
+  font-weight: normal;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#postform-wrap {
+  background: #ffffee;
+  border: 1px solid #800000;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  display: none;
+}
+
+#postform-wrap.open { display: block; }
+
+#postform-wrap h3 {
+  font-size: 13px;
+  color: #800000;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 4px;
+}
+
+.form-table { width: 100%; border-collapse: collapse; }
+.form-table td { padding: 3px 4px; vertical-align: top; }
+.form-table td:first-child {
+  font-weight: bold;
+  width: 80px;
+  color: #555;
+  font-size: 12px;
+  padding-top: 5px;
+}
+
+.form-table input[type=text],
+.form-table textarea,
+.form-table select {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  border: 1px solid #aaa;
+  padding: 2px 4px;
+  background: #fff;
+  width: 100%;
+}
+
+.form-table textarea { height: 80px; resize: vertical; }
+
+.submit-btn {
+  background: #800000;
+  color: #fff;
+  border: 1px solid #600;
+  padding: 3px 14px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}
+
+.submit-btn:hover { background: #a00000; }
+
+.form-note { font-size: 11px; color: #888; margin-top: 4px; }
+
+.thread {
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px dotted #aaa;
+}
+
+.thread-op {
+  background: #f0e0d6;
+  border: 1px solid #d9bfb7;
+  padding: 4px 6px;
+}
+
+.post-header { margin-bottom: 3px; line-height: 1.4; }
+
+.post-subject { color: #cc1105; font-weight: bold; font-size: 14px; }
+.post-name { color: #117743; font-weight: bold; }
+.post-time { color: #555; font-size: 11px; }
+.post-no { color: #34345c; font-size: 11px; }
+.post-no a { color: #34345c; text-decoration: none; font-size: 11px; }
+.post-no a:hover { text-decoration: underline; color: #dd0000; }
+
+.post-body {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 4px 0;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.greentext { color: #789922; }
+
+.post-actions { margin-top: 4px; font-size: 11px; color: #888; }
+.post-actions a { font-size: 11px; margin-right: 8px; }
+
+.replies { padding-left: 20px; margin-top: 0; display: none; }
+.replies.open { display: block; }
+
+.reply-post {
+  background: #d6daf0;
+  border: 1px solid #b7c5d9;
+  padding: 4px 6px;
+  margin-top: 4px;
+  display: inline-block;
+  width: 100%;
+}
+
+.reply-input-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  padding-left: 20px;
+}
+
+.reply-input-row textarea {
+  flex: 1;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  border: 1px solid #aaa;
+  padding: 3px 5px;
+  background: #fff;
+  height: 50px;
+  resize: vertical;
+}
+
+.reply-input-row button {
+  background: #34345c;
+  color: #fff;
+  border: 1px solid #222;
+  padding: 0 10px;
+  font-size: 11px;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  font-weight: bold;
+  align-self: flex-start;
+  height: 26px;
+}
+
+.reply-input-row button:hover { background: #555; }
+
+.omitted {
+  font-size: 11px;
+  color: #888;
+  padding-left: 20px;
+  margin-top: 3px;
+  font-style: italic;
+}
+
+#statsbar {
+  background: #ffffee;
+  border: 1px solid #ccc;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.rules-box {
+  background: #ffffee;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.rules-box b { color: #800000; }
+
+#footer {
+  text-align: center;
+  padding: 12px 4px 20px;
+  font-size: 11px;
+  color: #888;
+  border-top: 1px solid #aaa;
+  margin-top: 14px;
+}
+
+#footer a { color: #34345c; }
+</style>
+</head>
+<body>
+
+<div id="topbar">[ wchan.net ] &mdash; read the rules &mdash; no personal info &mdash; stay anonymous</div>
+
+<div id="header">
+  <h1>wchan</h1>
+  <div class="tagline">text boards &bull; est. 2003 &bull; owned by nobody</div>
+</div>
+
+<div id="boardnav">
+  <span>[</span>
+  <a onclick="filterBoard('all')" class="active" id="tab-all">all</a> /
+  <a onclick="filterBoard('b')" id="tab-b">b</a> /
+  <a onclick="filterBoard('tech')" id="tab-tech">tech</a> /
+  <a onclick="filterBoard('g')" id="tab-g">g</a> /
+  <a onclick="filterBoard('a')" id="tab-a">a</a> /
+  <a onclick="filterBoard('sci')" id="tab-sci">sci</a> /
+  <a onclick="filterBoard('pol')" id="tab-pol">pol</a> /
+  <a onclick="filterBoard('fit')" id="tab-fit">fit</a>
+  <span>]</span>
+</div>
+
+<div id="wrap">
+
+  <div id="statsbar">
+    Users online: <b id="online-count">312</b> &nbsp;|&nbsp;
+    Posts today: <b id="stat-posts">8,847</b> &nbsp;|&nbsp;
+    Total threads: <b id="stat-threads">1,203</b>
+  </div>
+
+  <div class="rules-box">
+    <b>Rules:</b> No real names / doxxing. No illegal content. No raids. Mark NSFW. Mods sleep, report wisely.
+    &nbsp;&nbsp;<b>[ <a onclick="toggleForm()">+ New Thread</a> ]</b>
+  </div>
+
+  <div id="postform-wrap">
+    <h3>Post a new thread</h3>
+    <table class="form-table">
+      <tr>
+        <td>Name</td>
+        <td><input type="text" id="new-name" style="width:200px"></td>
+      </tr>
+      <tr>
+        <td>Board</td>
+        <td>
+          <select id="new-board" style="width:160px">
+            <option value="b">/b/ - Random</option>
+            <option value="tech" selected>/tech/ - Technology</option>
+            <option value="g">/g/ - Gaming</option>
+            <option value="a">/a/ - Anime</option>
+            <option value="sci">/sci/ - Science</option>
+            <option value="pol">/pol/ - Politics</option>
+            <option value="fit">/fit/ - Fitness</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Subject</td>
+        <td><input type="text" id="new-title" style="width:100%"></td>
+      </tr>
+      <tr>
+        <td>Comment</td>
+        <td><textarea id="new-content"></textarea></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <button class="submit-btn" onclick="submitThread()">Submit</button>
+          &nbsp;<span class="form-note">[<a onclick="toggleForm()">close</a>]</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="board-title-bar">
+    <span id="board-title-text">/all/ &mdash; All Boards</span>
+    <span>
+      <a onclick="sortThreads('bump')">bump order</a> |
+      <a onclick="sortThreads('new')">newest</a> |
+      <a onclick="sortThreads('replies')">most replies</a>
+    </span>
+  </div>
+
+  <div id="thread-feed"></div>
+
+  <div id="footer">
+    wchan.net &mdash; all content posted is the responsibility of the poster &mdash; <a href="#">rules</a> &mdash; <a href="#">contact</a><br>
+    &copy; 2003&ndash;2009 wchan &mdash; delete cookies | report a post<br>
+    <span style="color:#aaa">Page generated in 0.031s &mdash; 147 queries</span>
+  </div>
+
+</div>
+
+<script>
+var threadIdCounter = 56200;
+var postIdCounter = 882000;
+var currentBoard = 'all';
+var currentSort = 'bump';
+
+var boardNames = {
+  b: '/b/ - Random',
+  tech: '/tech/ - Technology',
+  g: '/g/ - Gaming',
+  a: '/a/ - Anime',
+  sci: '/sci/ - Science',
+  pol: '/pol/ - Politics',
+  fit: '/fit/ - Fitness'
+};
+
+var threads = [];
+
+function fmtTime(ts) {
+  var d = new Date(ts);
+  var mo = d.getMonth()+1, dy = d.getDate(), yr = String(d.getFullYear()).slice(-2);
+  var hh = d.getHours(), mm = ('0'+d.getMinutes()).slice(-2), ss = ('0'+d.getSeconds()).slice(-2);
+  var ampm = hh >= 12 ? 'PM' : 'AM';
+  hh = hh % 12 || 12;
+  return mo+'/'+dy+'/'+yr+' '+hh+':'+mm+':'+ss+' '+ampm;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderBody(text) {
+  return escHtml(text).split('\n').map(function(line) {
+    if (line.charAt(0) === '&' && line.slice(0,4) === '&gt;') {
+      return '<span class="greentext">'+line+'</span>';
+    }
+    return line;
+  }).join('<br>');
+}
+
+function getSortedThreads() {
+  var list = currentBoard === 'all' ? threads.slice() : threads.filter(function(t){ return t.board === currentBoard; });
+  if (currentSort === 'bump') list.sort(function(a,b){ return b.bump - a.bump; });
+  else if (currentSort === 'new') list.sort(function(a,b){ return b.time - a.time; });
+  else if (currentSort === 'replies') list.sort(function(a,b){ return b.replies.length - a.replies.length; });
+  return list;
+}
+
+function renderFeed() {
+  var feed = document.getElementById('thread-feed');
+  feed.innerHTML = '';
+  getSortedThreads().forEach(function(t){ feed.appendChild(buildThread(t)); });
+  document.getElementById('board-title-text').textContent =
+    currentBoard === 'all' ? '/all/ \u2014 All Boards' : boardNames[currentBoard];
+}
+
+function buildThread(t) {
+  var div = document.createElement('div');
+  div.className = 'thread';
+  div.id = 'thread-'+t.id;
+
+  var showReplies = t.replies.slice(-3);
+  var omitted = t.replies.length - showReplies.length;
+
+  var repliesHtml = showReplies.map(function(r){
+    return '<div class="reply-post" id="post-'+r.id+'">'
+      +'<div class="post-header">'
+      +'<span class="post-name">'+escHtml(r.name)+'</span> '
+      +'<span class="post-time">'+fmtTime(r.time)+'</span> '
+      +'<span class="post-no">No.<a onclick="quotePost('+t.id+','+r.id+')">'+r.id+'</a></span>'
+      +'</div>'
+      +'<div class="post-body">'+renderBody(r.body)+'</div>'
+      +'</div>';
+  }).join('');
+
+  var omittedHtml = omitted > 0
+    ? '<div class="omitted">'+omitted+' post'+(omitted>1?'s':'')+' omitted. <a onclick="toggleReplies('+t.id+')">Click to expand.</a></div>'
+    : '';
+
+  div.innerHTML = '<div class="thread-op">'
+    +'<div class="post-header">'
+    +'<span class="post-subject">'+escHtml(t.subject)+'</span>&nbsp; '
+    +'<span class="post-name">'+escHtml(t.name)+'</span>&nbsp; '
+    +'<span class="post-time">'+fmtTime(t.time)+'</span>&nbsp; '
+    +'<span class="post-no">No.<a onclick="quotePost('+t.id+','+t.id+')">'+t.id+'</a></span>&nbsp;'
+    +'<span style="font-size:11px;color:#888;">['+escHtml(t.board)+']</span>'
+    +'</div>'
+    +'<div class="post-body">'+renderBody(t.body)+'</div>'
+    +'<div class="post-actions">'
+    +'[<a id="rc-'+t.id+'" onclick="toggleReplies('+t.id+')">'+t.replies.length+' repl'+(t.replies.length===1?'y':'ies')+'</a>]&nbsp;&nbsp;'
+    +'[<a onclick="reportThread('+t.id+')">report</a>]'
+    +'</div>'
+    +'</div>'
+    +omittedHtml
+    +'<div class="replies" id="replies-'+t.id+'">'+repliesHtml+'</div>'
+    +'<div class="reply-input-row" id="replyrow-'+t.id+'" style="display:none">'
+    +'<textarea id="reply-input-'+t.id+'"></textarea>'
+    +'<button onclick="submitReply('+t.id+')">Post</button>'
+    +'</div>';
+
+  return div;
+}
+
+function toggleReplies(id) {
+  var sec = document.getElementById('replies-'+id);
+  var row = document.getElementById('replyrow-'+id);
+  var open = sec.classList.toggle('open');
+  row.style.display = open ? 'flex' : 'none';
+}
+
+function quotePost(threadId, postId) {
+  var sec = document.getElementById('replies-'+threadId);
+  var row = document.getElementById('replyrow-'+threadId);
+  if (!sec.classList.contains('open')) {
+    sec.classList.add('open');
+    row.style.display = 'flex';
+  }
+  var inp = document.getElementById('reply-input-'+threadId);
+  inp.value = (inp.value ? inp.value+'\n' : '')+'>>'+postId+'\n';
+  inp.focus();
+}
+
+function submitReply(id) {
+  var inp = document.getElementById('reply-input-'+id);
+  var text = inp.value.trim();
+  if (!text) return;
+  var t = threads.find(function(x){ return x.id===id; });
+  var reply = { id: ++postIdCounter, name: 'Anonymous', time: Date.now(), body: text };
+  t.replies.push(reply);
+  t.bump = Date.now();
+  inp.value = '';
+
+  var list = document.getElementById('replies-'+id);
+  var tmp = document.createElement('div');
+  tmp.innerHTML = '<div class="reply-post" id="post-'+reply.id+'">'
+    +'<div class="post-header">'
+    +'<span class="post-name">Anonymous</span> '
+    +'<span class="post-time">'+fmtTime(reply.time)+'</span> '
+    +'<span class="post-no">No.<a onclick="quotePost('+id+','+reply.id+')">'+reply.id+'</a></span>'
+    +'</div>'
+    +'<div class="post-body">'+renderBody(reply.body)+'</div>'
+    +'</div>';
+  list.appendChild(tmp.firstElementChild);
+
+  var rc = document.getElementById('rc-'+id);
+  if (rc) rc.textContent = t.replies.length+' repl'+(t.replies.length===1?'y':'ies');
+
+  var sp = document.getElementById('stat-posts');
+  sp.textContent = (parseInt(sp.textContent.replace(/,/g,''))+1).toLocaleString();
+}
+
+function filterBoard(board) {
+  currentBoard = board;
+  document.querySelectorAll('#boardnav a').forEach(function(a){ a.classList.remove('active'); });
+  var el = document.getElementById('tab-'+board);
+  if (el) el.classList.add('active');
+  renderFeed();
+}
+
+function sortThreads(sort) {
+  currentSort = sort;
+  renderFeed();
+}
+
+function toggleForm() {
+  var f = document.getElementById('postform-wrap');
+  f.classList.toggle('open');
+  if (f.classList.contains('open')) document.getElementById('new-title').focus();
+}
+
+function submitThread() {
+  var title = document.getElementById('new-title').value.trim();
+  var body = document.getElementById('new-content').value.trim();
+  var board = document.getElementById('new-board').value;
+  var name = document.getElementById('new-name').value.trim() || 'Anonymous';
+  if (!title || !body) { alert('Subject and comment required.'); return; }
+
+  var t = { id: ++threadIdCounter, board: board, subject: title, body: body, name: name, time: Date.now(), bump: Date.now(), replies: [] };
+  threads.unshift(t);
+  renderFeed();
+  ['new-title','new-content','new-name'].forEach(function(x){ document.getElementById(x).value=''; });
+  document.getElementById('postform-wrap').classList.remove('open');
+
+  var st = document.getElementById('stat-threads');
+  st.textContent = (parseInt(st.textContent.replace(/,/g,''))+1).toLocaleString();
+
+  setTimeout(function(){
+    var el = document.getElementById('thread-'+t.id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }, 80);
+}
+
+function reportThread(id) {
+  alert('Thread No.'+id+' reported. Mods notified.');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('postform-wrap').classList.remove('open');
+});
+
+setInterval(function() {
+  var el = document.getElementById('online-count');
+  var cur = parseInt(el.textContent);
+  el.textContent = cur + Math.floor(Math.random()*5) - 2;
+}, 9000);
+
+renderFeed();
+</script>
+</body>
+</html>

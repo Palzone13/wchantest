@@ -212,6 +212,12 @@ a:hover { text-decoration: underline; }
 .admin-board-form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
 .admin-board-form input { font-family: inherit; font-size: 13px; border: 1px solid var(--border-med); border-radius: var(--radius-sm); padding: 6px 10px; background: var(--surface); color: var(--text); }
 
+/* report modal */
+#report-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; align-items:center; justify-content:center; }
+#report-modal.open { display:flex; }
+#report-modal-box { background:var(--surface); border-radius:var(--radius); border:1px solid var(--border-med); padding:20px 22px; width:340px; max-width:95vw; }
+#report-modal-box h3 { font-size:14px; font-weight:600; margin-bottom:14px; }
+
 /* compact mode */
 body.compact .post-body { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 body.compact .post-file img { max-width: 100px; max-height: 100px; }
@@ -344,12 +350,14 @@ body.compact .post-file img { max-width: 100px; max-height: 100px; }
         <div class="admin-stat-box"><b id="admin-stat-threads">0</b><span>threads</span></div>
         <div class="admin-stat-box"><b id="admin-stat-replies">0</b><span>replies</span></div>
         <div class="admin-stat-box"><b id="admin-stat-users">0</b><span>users</span></div>
+        <div class="admin-stat-box"><b id="admin-stat-reports">0</b><span>reports</span></div>
       </div>
       <div class="panel-tabs">
         <button class="panel-tab active" onclick="adminTab('threads')">threads</button>
         <button class="panel-tab" onclick="adminTab('replies')">replies</button>
         <button class="panel-tab" onclick="adminTab('users')">users</button>
         <button class="panel-tab" onclick="adminTab('boards')">boards</button>
+        <button class="panel-tab" id="admin-reports-tab" onclick="adminTab('reports')">reports <span id="admin-reports-badge" style="background:var(--accent);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;display:none"></span></button>
       </div>
       <div id="admin-threads-panel">
         <input class="admin-search" type="text" id="admin-search-threads" oninput="adminFilter('threads')" placeholder="search subject, name, body, board...">
@@ -371,6 +379,10 @@ body.compact .post-file img { max-width: 100px; max-height: 100px; }
           <span class="field-err" id="admin-board-err" style="display:inline"></span>
         </div>
         <div id="admin-boards-list"></div>
+      </div>
+      <div id="admin-reports-panel" style="display:none">
+        <input class="admin-search" type="text" id="admin-search-reports" oninput="adminFilter('reports')" placeholder="search thread, name, reason...">
+        <div id="admin-reports-list"></div>
       </div>
       <div class="form-actions" style="margin-top:12px"><button class="btn-close" onclick="closeAdmin()">close</button></div>
     </div>
@@ -413,6 +425,25 @@ body.compact .post-file img { max-width: 100px; max-height: 100px; }
       &copy; 2026 paltalk &mdash; <a href="#">delete cookies</a>
     </div>
 
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div id="report-modal" onclick="if(event.target===this)closeReportModal()">
+  <div id="report-modal-box">
+    <h3>report post</h3>
+    <input type="hidden" id="report-thread-id">
+    <input type="hidden" id="report-reply-id">
+    <div class="field-row">
+      <label>reason</label>
+      <textarea id="report-reason" placeholder="describe the issue (spam, illegal content, doxxing...)" style="height:80px"></textarea>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:10px">reports are reviewed by moderators.</div>
+    <div class="form-actions">
+      <button class="btn-submit" id="report-submit-btn" onclick="submitReport()">submit report</button>
+      <button class="btn-close" onclick="closeReportModal()">cancel</button>
+      <span id="report-err" style="font-size:12px;color:#cc2200;margin-left:6px"></span>
+    </div>
   </div>
 </div>
 
@@ -741,7 +772,7 @@ function buildThread(t) {
     +'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h9a3 3 0 010 6H7"/><path d="M4 3L2 5l2 2"/></svg>'
     +t.replies.length+' repl'+(t.replies.length===1?'y':'ies')
     +'</button>'
-    +'<button class="thread-action" onclick="reportThread('+t.id+')">report</button>'
+    +'<button class="thread-action" onclick="reportThread('+t.id+',null)">report</button>'
     +'</div>'
     +omittedHtml
     +'<div class="replies-section" id="replies-'+t.id+'">'+repliesHtml+'</div>'
@@ -855,7 +886,34 @@ async function submitThread() {
   setTimeout(function(){ var el=document.getElementById('thread-'+t.id); if(el) el.scrollIntoView({behavior:'smooth'}); }, 80);
 }
 
-function reportThread(id) { alert('Thread No.'+id+' reported. Mods notified.'); }
+function reportThread(threadId, replyId) {
+  var modal = document.getElementById('report-modal');
+  document.getElementById('report-thread-id').value = threadId;
+  document.getElementById('report-reply-id').value = replyId || '';
+  document.getElementById('report-reason').value = '';
+  document.getElementById('report-err').textContent = '';
+  modal.classList.add('open');
+}
+function closeReportModal() { document.getElementById('report-modal').classList.remove('open'); }
+
+async function submitReport() {
+  var threadId = document.getElementById('report-thread-id').value;
+  var replyId = document.getElementById('report-reply-id').value;
+  var reason = document.getElementById('report-reason').value.trim();
+  var err = document.getElementById('report-err');
+  if (!reason) { err.textContent = 'please enter a reason.'; return; }
+  var btn = document.getElementById('report-submit-btn');
+  btn.disabled = true; btn.textContent = 'submitting...';
+  await sbPost('reports', {
+    thread_id: parseInt(threadId) || null,
+    reply_id: replyId ? parseInt(replyId) : null,
+    reason: reason,
+    reporter_name: currentUser ? currentUser.username : 'Anonymous'
+  });
+  btn.disabled = false; btn.textContent = 'submit report';
+  closeReportModal();
+  alert('Report submitted. Mods have been notified.');
+}
 
 // ── LIGHTBOX ──────────────────────────────────────────────────────────────────
 function openLightbox(url) { document.getElementById('lightbox-img').src=url; document.getElementById('lightbox').classList.add('open'); }
@@ -872,17 +930,21 @@ async function openAdmin() {
 }
 function closeAdmin() { document.getElementById('admin-wrap').classList.remove('open'); }
 
-var adminData = { threads: [], replies: [], users: [] };
+var adminData = { threads: [], replies: [], users: [], reports: [] };
 
 async function loadAdminData() {
   var allThreads = await sbGet('threads?order=created_at.desc');
   var allReplies = await sbGet('replies?order=created_at.desc');
   var allUsers = await sbGet('users?order=created_at.desc&select=id,username,created_at');
-  adminData.threads = allThreads||[]; adminData.replies = allReplies||[]; adminData.users = allUsers||[];
+  var allReports = await sbGet('reports?order=created_at.desc');
+  adminData.threads = allThreads||[]; adminData.replies = allReplies||[]; adminData.users = allUsers||[]; adminData.reports = allReports||[];
   document.getElementById('admin-stat-threads').textContent = adminData.threads.length;
   document.getElementById('admin-stat-replies').textContent = adminData.replies.length;
   document.getElementById('admin-stat-users').textContent = adminData.users.length;
-  renderAdminThreads(adminData.threads); renderAdminReplies(adminData.replies); renderAdminUsers(adminData.users); renderAdminBoards();
+  document.getElementById('admin-stat-reports').textContent = adminData.reports.length;
+  var badge = document.getElementById('admin-reports-badge');
+  if (adminData.reports.length > 0) { badge.textContent = adminData.reports.length; badge.style.display = 'inline'; } else { badge.style.display = 'none'; }
+  renderAdminThreads(adminData.threads); renderAdminReplies(adminData.replies); renderAdminUsers(adminData.users); renderAdminBoards(); renderAdminReports(adminData.reports);
 }
 
 function adminFilter(tab) {
@@ -890,6 +952,7 @@ function adminFilter(tab) {
   if (tab==='threads') renderAdminThreads(adminData.threads.filter(function(t){ return (t.subject||'').toLowerCase().includes(q)||(t.name||'').toLowerCase().includes(q)||(t.body||'').toLowerCase().includes(q)||(t.board||'').toLowerCase().includes(q)||String(t.id).includes(q); }));
   else if (tab==='replies') renderAdminReplies(adminData.replies.filter(function(r){ return (r.name||'').toLowerCase().includes(q)||(r.body||'').toLowerCase().includes(q)||String(r.id).includes(q)||String(r.thread_id).includes(q); }));
   else if (tab==='users') renderAdminUsers(adminData.users.filter(function(u){ return (u.username||'').toLowerCase().includes(q)||String(u.id).includes(q); }));
+  else if (tab==='reports') renderAdminReports(adminData.reports.filter(function(r){ return (r.reason||'').toLowerCase().includes(q)||(r.reporter_name||'').toLowerCase().includes(q)||String(r.thread_id||'').includes(q)||String(r.id).includes(q); }));
 }
 
 function renderAdminThreads(list) {
@@ -912,9 +975,37 @@ function renderAdminBoards() {
   boards.forEach(function(b){ h+='<tr><td><b>/'+escHtml(b.slug)+'/</b></td><td>'+escHtml(b.name)+'</td><td><button class="admin-del-btn" onclick="adminDeleteBoard('+b.id+',\''+escHtml(b.slug)+'\')">delete</button></td></tr>'; });
   document.getElementById('admin-boards-list').innerHTML = h+'</table>';
 }
+function renderAdminReports(list) {
+  if (list.length === 0) { document.getElementById('admin-reports-list').innerHTML = '<div style="font-size:12px;color:var(--text3);padding:10px 0">no reports.</div>'; return; }
+  var h='<table class="admin-table"><tr><th>ID</th><th>Thread</th><th>Reply</th><th>Reporter</th><th>Reason</th><th>Date</th><th></th></tr>';
+  list.forEach(function(r){
+    h+='<tr>'
+      +'<td>'+r.id+'</td>'
+      +'<td>'+(r.thread_id ? '<a onclick="scrollToThread('+r.thread_id+')" style="cursor:pointer">No.'+r.thread_id+'</a>' : '—')+'</td>'
+      +'<td>'+(r.reply_id ? 'No.'+r.reply_id : '—')+'</td>'
+      +'<td>'+escHtml(r.reporter_name||'Anonymous')+'</td>'
+      +'<td>'+escHtml(r.reason||'')+'</td>'
+      +'<td>'+fmtTime(new Date(r.created_at).getTime())+'</td>'
+      +'<td><button class="admin-del-btn" onclick="adminDismissReport('+r.id+')">dismiss</button></td>'
+      +'</tr>';
+  });
+  document.getElementById('admin-reports-list').innerHTML = h+'</table>';
+}
+
+function scrollToThread(id) {
+  closeAdmin();
+  setTimeout(function(){ var el=document.getElementById('thread-'+id); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200);
+}
+
+async function adminDismissReport(id) {
+  if (!confirm('Dismiss report No.'+id+'?')) return;
+  await sbDelete('reports','id=eq.'+id);
+  await loadAdminData();
+}
+
 function adminTab(tab) {
-  ['threads','replies','users','boards'].forEach(function(t){ document.getElementById('admin-'+t+'-panel').style.display=t===tab?'':'none'; });
-  document.querySelectorAll('#admin-wrap .panel-tab').forEach(function(el,i){ el.classList.toggle('active',['threads','replies','users','boards'][i]===tab); });
+  ['threads','replies','users','boards','reports'].forEach(function(t){ document.getElementById('admin-'+t+'-panel').style.display=t===tab?'':'none'; });
+  document.querySelectorAll('#admin-wrap .panel-tab').forEach(function(el,i){ el.classList.toggle('active',['threads','replies','users','boards','reports'][i]===tab); });
 }
 async function adminDeleteThread(id) {
   if (!confirm('Delete thread No.'+id+' and all its replies?')) return;

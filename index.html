@@ -240,14 +240,8 @@ a:hover { color: #dd0000; }
 <div id="boardnav">
   <div id="boardnav-links">
     <span>[</span>
-    <a onclick="filterBoard('all')" class="active" id="tab-all">all</a> /
-    <a onclick="filterBoard('b')" id="tab-b">b</a> /
-    <a onclick="filterBoard('tech')" id="tab-tech">tech</a> /
-    <a onclick="filterBoard('g')" id="tab-g">g</a> /
-    <a onclick="filterBoard('a')" id="tab-a">a</a> /
-    <a onclick="filterBoard('sci')" id="tab-sci">sci</a> /
-    <a onclick="filterBoard('pol')" id="tab-pol">pol</a> /
-    <a onclick="filterBoard('fit')" id="tab-fit">fit</a>
+    <a onclick="filterBoard('all')" class="active" id="tab-all">all</a>
+    <span id="board-nav-dynamic"></span>
     <span>]</span>
   </div>
   <div id="userbar">
@@ -321,6 +315,7 @@ a:hover { color: #dd0000; }
       <button class="admin-tab active" onclick="adminTab('threads')">Threads</button>
       <button class="admin-tab" onclick="adminTab('replies')">Replies</button>
       <button class="admin-tab" onclick="adminTab('users')">Users</button>
+      <button class="admin-tab" onclick="adminTab('boards')">Boards</button>
     </div>
     <div id="admin-threads-panel">
       <input type="text" id="admin-search-threads" oninput="adminFilter('threads')" placeholder="search subject, name, body..." style="width:100%;font-size:12px;padding:3px 6px;border:1px solid #aaa;margin-bottom:6px;font-family:Arial,sans-serif">
@@ -333,6 +328,15 @@ a:hover { color: #dd0000; }
     <div id="admin-users-panel" style="display:none">
       <input type="text" id="admin-search-users" oninput="adminFilter('users')" placeholder="search username..." style="width:100%;font-size:12px;padding:3px 6px;border:1px solid #aaa;margin-bottom:6px;font-family:Arial,sans-serif">
       <div id="admin-users-list"></div>
+    </div>
+    <div id="admin-boards-panel" style="display:none">
+      <div style="margin-bottom:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <input type="text" id="admin-board-slug" placeholder="slug (e.g. mu)" style="width:100px;font-size:12px;padding:3px 6px;border:1px solid #aaa;font-family:Arial,sans-serif">
+        <input type="text" id="admin-board-name" placeholder="name (e.g. /mu/ - Music)" style="width:200px;font-size:12px;padding:3px 6px;border:1px solid #aaa;font-family:Arial,sans-serif">
+        <button class="submit-btn" onclick="adminAddBoard()" style="padding:3px 10px;font-size:12px">+ Add Board</button>
+        <span class="form-err" id="admin-board-err" style="display:inline"></span>
+      </div>
+      <div id="admin-boards-list"></div>
     </div>
     <div style="margin-top:8px"><span class="form-note">[<a onclick="closeAdmin()">close</a>]</span></div>
   </div>
@@ -350,13 +354,6 @@ a:hover { color: #dd0000; }
         <td>Board</td>
         <td>
           <select id="new-board" style="width:160px">
-            <option value="b">/b/ - Random</option>
-            <option value="tech" selected>/tech/ - Technology</option>
-            <option value="g">/g/ - Gaming</option>
-            <option value="a">/a/ - Anime</option>
-            <option value="sci">/sci/ - Science</option>
-            <option value="pol">/pol/ - Politics</option>
-            <option value="fit">/fit/ - Fitness</option>
           </select>
         </td>
       </tr>
@@ -410,11 +407,7 @@ var currentBoard = 'all';
 var currentSort = 'bump';
 var threads = [];
 var currentUser = null;
-
-var boardNames = {
-  b: '/b/ - Random', tech: '/tech/ - Technology', g: '/g/ - Gaming',
-  a: '/a/ - Anime', sci: '/sci/ - Science', pol: '/pol/ - Politics', fit: '/fit/ - Fitness'
-};
+var boards = []; // loaded from Supabase
 
 var ALLOWED_TYPES = {
   'image/jpeg': 'image', 'image/png': 'image', 'image/gif': 'image',
@@ -607,6 +600,33 @@ async function openProfile() {
 
 function closeProfile() { document.getElementById('profile-wrap').classList.remove('open'); }
 
+// ── BOARDS ────────────────────────────────────────────────────────────────────
+async function loadBoards() {
+  var rows = await sbGet('boards?order=id.asc');
+  boards = rows || [];
+  renderBoardNav();
+  renderBoardSelect();
+}
+
+function renderBoardNav() {
+  var nav = document.getElementById('board-nav-dynamic');
+  nav.innerHTML = boards.map(function(b) {
+    return ' / <a onclick="filterBoard(\''+escHtml(b.slug)+'\')" id="tab-'+escHtml(b.slug)+'">'+escHtml(b.slug)+'</a>';
+  }).join('');
+}
+
+function renderBoardSelect() {
+  var sel = document.getElementById('new-board');
+  sel.innerHTML = boards.map(function(b, i) {
+    return '<option value="'+escHtml(b.slug)+'"'+(i===0?' selected':'')+'>'+escHtml(b.name)+'</option>';
+  }).join('');
+}
+
+function getBoardName(slug) {
+  var b = boards.find(function(x){ return x.slug === slug; });
+  return b ? b.name : '/'+slug+'/';
+}
+
 // ── LOAD ──────────────────────────────────────────────────────────────────────
 async function loadAll() {
   var feed = document.getElementById('thread-feed');
@@ -694,7 +714,7 @@ function renderFeed() {
     list.forEach(function(t){ feed.appendChild(buildThread(t)); });
   }
   document.getElementById('board-title-text').textContent =
-    currentBoard==='all' ? '/all/ \u2014 All Boards' : boardNames[currentBoard];
+    currentBoard==='all' ? '/all/ \u2014 All Boards' : getBoardName(currentBoard);
 }
 
 function buildThread(t) {
@@ -949,6 +969,49 @@ async function loadAdminData() {
   renderAdminThreads(adminData.threads);
   renderAdminReplies(adminData.replies);
   renderAdminUsers(adminData.users);
+  renderAdminBoards();
+}
+
+function renderAdminBoards() {
+  var html = '<table class="admin-table"><tr><th>Slug</th><th>Name</th><th></th></tr>';
+  boards.forEach(function(b) {
+    html += '<tr>'
+      +'<td><b>/'+escHtml(b.slug)+'/</b></td>'
+      +'<td>'+escHtml(b.name)+'</td>'
+      +'<td><button class="admin-del-btn" onclick="adminDeleteBoard('+b.id+',\''+escHtml(b.slug)+'\')">delete</button></td>'
+      +'</tr>';
+  });
+  html += '</table>';
+  document.getElementById('admin-boards-list').innerHTML = html;
+}
+
+async function adminAddBoard() {
+  var slug = document.getElementById('admin-board-slug').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+  var name = document.getElementById('admin-board-name').value.trim();
+  var err = document.getElementById('admin-board-err');
+  err.textContent = ''; err.style.display = 'none';
+  if (!slug || !name) { err.textContent = 'slug and name required.'; err.style.display = 'inline'; return; }
+  if (boards.find(function(b){ return b.slug === slug; })) { err.textContent = 'slug already exists.'; err.style.display = 'inline'; return; }
+  var saved = await sbPost('boards', { slug: slug, name: name });
+  if (!saved || !saved.id) { err.textContent = 'error saving board.'; err.style.display = 'inline'; return; }
+  boards.push(saved);
+  document.getElementById('admin-board-slug').value = '';
+  document.getElementById('admin-board-name').value = '';
+  renderBoardNav();
+  renderBoardSelect();
+  renderAdminBoards();
+}
+
+async function adminDeleteBoard(id, slug) {
+  if (!confirm('Delete board /'+slug+'/? Threads on this board will still exist.')) return;
+  await fetch(SUPABASE_URL+'/rest/v1/boards?id=eq.'+id, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY }
+  });
+  boards = boards.filter(function(b){ return b.id !== id; });
+  renderBoardNav();
+  renderBoardSelect();
+  renderAdminBoards();
 }
 
 function adminFilter(tab) {
@@ -1026,11 +1089,11 @@ function renderAdminUsers(list) {
 }
 
 function adminTab(tab) {
-  ['threads','replies','users'].forEach(function(t) {
+  ['threads','replies','users','boards'].forEach(function(t) {
     document.getElementById('admin-'+t+'-panel').style.display = t === tab ? '' : 'none';
   });
   document.querySelectorAll('.admin-tab').forEach(function(el, i) {
-    el.classList.toggle('active', ['threads','replies','users'][i] === tab);
+    el.classList.toggle('active', ['threads','replies','users','boards'][i] === tab);
   });
 }
 
@@ -1072,6 +1135,7 @@ async function adminDeleteUser(id) {
 }
 
 loadSession();
+loadBoards();
 loadAll();
 </script>
 </body>

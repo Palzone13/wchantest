@@ -322,9 +322,18 @@ a:hover { color: #dd0000; }
       <button class="admin-tab" onclick="adminTab('replies')">Replies</button>
       <button class="admin-tab" onclick="adminTab('users')">Users</button>
     </div>
-    <div id="admin-threads-panel"><div id="admin-threads-list"></div></div>
-    <div id="admin-replies-panel" style="display:none"><div id="admin-replies-list"></div></div>
-    <div id="admin-users-panel" style="display:none"><div id="admin-users-list"></div></div>
+    <div id="admin-threads-panel">
+      <input type="text" id="admin-search-threads" oninput="adminFilter('threads')" placeholder="search subject, name, body..." style="width:100%;font-size:12px;padding:3px 6px;border:1px solid #aaa;margin-bottom:6px;font-family:Arial,sans-serif">
+      <div id="admin-threads-list"></div>
+    </div>
+    <div id="admin-replies-panel" style="display:none">
+      <input type="text" id="admin-search-replies" oninput="adminFilter('replies')" placeholder="search name, body..." style="width:100%;font-size:12px;padding:3px 6px;border:1px solid #aaa;margin-bottom:6px;font-family:Arial,sans-serif">
+      <div id="admin-replies-list"></div>
+    </div>
+    <div id="admin-users-panel" style="display:none">
+      <input type="text" id="admin-search-users" oninput="adminFilter('users')" placeholder="search username..." style="width:100%;font-size:12px;padding:3px 6px;border:1px solid #aaa;margin-bottom:6px;font-family:Arial,sans-serif">
+      <div id="admin-users-list"></div>
+    </div>
     <div style="margin-top:8px"><span class="form-note">[<a onclick="closeAdmin()">close</a>]</span></div>
   </div>
 
@@ -922,22 +931,57 @@ async function openAdmin() {
 
 function closeAdmin() { document.getElementById('admin-wrap').classList.remove('open'); }
 
+var adminData = { threads: [], replies: [], users: [] };
+
 async function loadAdminData() {
   var allThreads = await sbGet('threads?order=created_at.desc');
   var allReplies = await sbGet('replies?order=created_at.desc');
   var allUsers   = await sbGet('users?order=created_at.desc&select=id,username,created_at');
 
-  allThreads = allThreads || [];
-  allReplies = allReplies || [];
-  allUsers   = allUsers   || [];
+  adminData.threads = allThreads || [];
+  adminData.replies = allReplies || [];
+  adminData.users   = allUsers   || [];
 
-  document.getElementById('admin-stat-threads').textContent = allThreads.length;
-  document.getElementById('admin-stat-replies').textContent = allReplies.length;
-  document.getElementById('admin-stat-users').textContent   = allUsers.length;
+  document.getElementById('admin-stat-threads').textContent = adminData.threads.length;
+  document.getElementById('admin-stat-replies').textContent = adminData.replies.length;
+  document.getElementById('admin-stat-users').textContent   = adminData.users.length;
 
-  // threads table
+  renderAdminThreads(adminData.threads);
+  renderAdminReplies(adminData.replies);
+  renderAdminUsers(adminData.users);
+}
+
+function adminFilter(tab) {
+  var q = document.getElementById('admin-search-'+tab).value.toLowerCase().trim();
+  if (tab === 'threads') {
+    var filtered = adminData.threads.filter(function(t) {
+      return (t.subject||'').toLowerCase().includes(q)
+          || (t.name||'').toLowerCase().includes(q)
+          || (t.body||'').toLowerCase().includes(q)
+          || (t.board||'').toLowerCase().includes(q)
+          || String(t.id).includes(q);
+    });
+    renderAdminThreads(filtered);
+  } else if (tab === 'replies') {
+    var filtered = adminData.replies.filter(function(r) {
+      return (r.name||'').toLowerCase().includes(q)
+          || (r.body||'').toLowerCase().includes(q)
+          || String(r.id).includes(q)
+          || String(r.thread_id).includes(q);
+    });
+    renderAdminReplies(filtered);
+  } else if (tab === 'users') {
+    var filtered = adminData.users.filter(function(u) {
+      return (u.username||'').toLowerCase().includes(q)
+          || String(u.id).includes(q);
+    });
+    renderAdminUsers(filtered);
+  }
+}
+
+function renderAdminThreads(list) {
   var thtml = '<table class="admin-table"><tr><th>No.</th><th>Board</th><th>Subject</th><th>Name</th><th>Date</th><th></th></tr>';
-  allThreads.forEach(function(t) {
+  list.forEach(function(t) {
     thtml += '<tr>'
       +'<td>'+t.id+'</td>'
       +'<td>'+escHtml(t.board||'')+'</td>'
@@ -949,10 +993,11 @@ async function loadAdminData() {
   });
   thtml += '</table>';
   document.getElementById('admin-threads-list').innerHTML = thtml;
+}
 
-  // replies table
+function renderAdminReplies(list) {
   var rhtml = '<table class="admin-table"><tr><th>No.</th><th>Thread</th><th>Name</th><th>Body</th><th>Date</th><th></th></tr>';
-  allReplies.forEach(function(r) {
+  list.forEach(function(r) {
     rhtml += '<tr>'
       +'<td>'+r.id+'</td>'
       +'<td>'+r.thread_id+'</td>'
@@ -964,10 +1009,11 @@ async function loadAdminData() {
   });
   rhtml += '</table>';
   document.getElementById('admin-replies-list').innerHTML = rhtml;
+}
 
-  // users table
+function renderAdminUsers(list) {
   var uhtml = '<table class="admin-table"><tr><th>ID</th><th>Username</th><th>Joined</th><th></th></tr>';
-  allUsers.forEach(function(u) {
+  list.forEach(function(u) {
     uhtml += '<tr>'
       +'<td>'+u.id+'</td>'
       +'<td>'+escHtml(u.username)+'</td>'

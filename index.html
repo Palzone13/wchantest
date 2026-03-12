@@ -195,6 +195,36 @@ a:hover { color: #dd0000; }
   text-align: center; padding: 12px 4px 20px; font-size: 11px;
   color: #888; border-top: 1px solid #aaa; margin-top: 14px;
 }
+/* ADMIN PANEL */
+#admin-wrap {
+  background: #ffffff; border: 2px solid #cc5500; padding: 8px 12px; margin-bottom: 10px; display: none;
+}
+#admin-wrap.open { display: block; }
+#admin-wrap h3 { font-size: 13px; color: #cc5500; margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+
+.admin-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+.admin-tab {
+  font-size: 12px; padding: 2px 10px; border: 1px solid #aaa;
+  background: #f0f0f0; cursor: pointer; font-family: Arial, sans-serif;
+}
+.admin-tab.active { background: #cc5500; color: #fff; border-color: #aa3300; }
+
+.admin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.admin-table th { background: #cc5500; color: #fff; padding: 3px 6px; text-align: left; font-size: 11px; }
+.admin-table td { padding: 3px 6px; border-bottom: 1px solid #ddd; vertical-align: top; }
+.admin-table tr:hover td { background: #fff0e8; }
+
+.admin-del-btn {
+  background: #cc0000; color: #fff; border: none; padding: 1px 7px;
+  font-size: 11px; cursor: pointer; font-family: Arial, sans-serif;
+}
+.admin-del-btn:hover { background: #aa0000; }
+
+.admin-section-title { font-size: 11px; color: #cc5500; font-weight: bold; margin: 8px 0 4px; }
+.admin-stats-grid { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
+.admin-stat-box { background: #fff0e8; border: 1px solid #cc5500; padding: 6px 12px; font-size: 12px; }
+.admin-stat-box b { display: block; font-size: 20px; color: #cc5500; }
+
 #footer a { color: #34345c; }
 </style>
 </head>
@@ -279,8 +309,27 @@ a:hover { color: #dd0000; }
     <div style="margin-top:8px"><span class="form-note">[<a onclick="closeProfile()">close</a>]</span></div>
   </div>
 
+  <!-- ADMIN PANEL -->
+  <div id="admin-wrap">
+    <h3>&#9760; admin panel &mdash; palopedia</h3>
+    <div class="admin-stats-grid">
+      <div class="admin-stat-box"><b id="admin-stat-threads">0</b>threads</div>
+      <div class="admin-stat-box"><b id="admin-stat-replies">0</b>replies</div>
+      <div class="admin-stat-box"><b id="admin-stat-users">0</b>users</div>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="adminTab('threads')">Threads</button>
+      <button class="admin-tab" onclick="adminTab('replies')">Replies</button>
+      <button class="admin-tab" onclick="adminTab('users')">Users</button>
+    </div>
+    <div id="admin-threads-panel"><div id="admin-threads-list"></div></div>
+    <div id="admin-replies-panel" style="display:none"><div id="admin-replies-list"></div></div>
+    <div id="admin-users-panel" style="display:none"><div id="admin-users-list"></div></div>
+    <div style="margin-top:8px"><span class="form-note">[<a onclick="closeAdmin()">close</a>]</span></div>
+  </div>
+
   <div class="rules-box">
-    <b>Rules:</b> No real names / doxxing. No illegal content. No raids. Mark NSFW. Max file size 50MB.
+    <b>Rules:</b> No real names / doxxing. No illegal content. No raids. Max file size 50MB.
     &nbsp;&nbsp;<b>[ <a onclick="toggleForm()">+ New Thread</a> ]</b>
   </div>
 
@@ -454,7 +503,9 @@ function updateUserbar() {
     document.getElementById('userbar-guest').style.display = 'none';
     document.getElementById('userbar-loggedin').style.display = '';
     document.getElementById('userbar-loggedin').innerHTML =
-      '[ <b style="color:#117743">'+escHtml(currentUser.username)+'</b> | <a onclick="openProfile()">profile</a> | <a onclick="logout()">logout</a> ]';
+      '[ <b style="color:#117743">'+escHtml(currentUser.username)+'</b> | <a onclick="openProfile()">profile</a>'
+      +(currentUser.username === 'Admin' ? ' | <a onclick="openAdmin()" style="color:#cc5500;font-weight:bold">admin</a>' : '')
+      +' | <a onclick="logout()">logout</a> ]';
   } else {
     document.getElementById('userbar-guest').style.display = '';
     document.getElementById('userbar-loggedin').style.display = 'none';
@@ -846,6 +897,7 @@ document.addEventListener('keydown', function(e) {
     document.getElementById('postform-wrap').classList.remove('open');
     document.getElementById('auth-wrap').classList.remove('open');
     document.getElementById('profile-wrap').classList.remove('open');
+    document.getElementById('admin-wrap').classList.remove('open');
     closeLightbox();
   }
 });
@@ -854,6 +906,124 @@ setInterval(function() {
   var el = document.getElementById('online-count');
   el.textContent = parseInt(el.textContent) + Math.floor(Math.random()*5) - 2;
 }, 9000);
+
+// ── ADMIN ─────────────────────────────────────────────────────────────────────
+async function openAdmin() {
+  if (!currentUser || currentUser.username !== 'Admin') return;
+  // close everything else first
+  document.getElementById('auth-wrap').classList.remove('open');
+  document.getElementById('profile-wrap').classList.remove('open');
+  document.getElementById('postform-wrap').classList.remove('open');
+  var wrap = document.getElementById('admin-wrap');
+  wrap.classList.add('open');
+  wrap.scrollIntoView({ behavior: 'smooth' });
+  await loadAdminData();
+}
+
+function closeAdmin() { document.getElementById('admin-wrap').classList.remove('open'); }
+
+async function loadAdminData() {
+  var allThreads = await sbGet('threads?order=created_at.desc');
+  var allReplies = await sbGet('replies?order=created_at.desc');
+  var allUsers   = await sbGet('users?order=created_at.desc&select=id,username,created_at');
+
+  allThreads = allThreads || [];
+  allReplies = allReplies || [];
+  allUsers   = allUsers   || [];
+
+  document.getElementById('admin-stat-threads').textContent = allThreads.length;
+  document.getElementById('admin-stat-replies').textContent = allReplies.length;
+  document.getElementById('admin-stat-users').textContent   = allUsers.length;
+
+  // threads table
+  var thtml = '<table class="admin-table"><tr><th>No.</th><th>Board</th><th>Subject</th><th>Name</th><th>Date</th><th></th></tr>';
+  allThreads.forEach(function(t) {
+    thtml += '<tr>'
+      +'<td>'+t.id+'</td>'
+      +'<td>'+escHtml(t.board||'')+'</td>'
+      +'<td>'+escHtml((t.subject||'').slice(0,40))+'</td>'
+      +'<td>'+escHtml(t.name||'Anonymous')+'</td>'
+      +'<td>'+fmtTime(new Date(t.created_at).getTime())+'</td>'
+      +'<td><button class="admin-del-btn" onclick="adminDeleteThread('+t.id+')">delete</button></td>'
+      +'</tr>';
+  });
+  thtml += '</table>';
+  document.getElementById('admin-threads-list').innerHTML = thtml;
+
+  // replies table
+  var rhtml = '<table class="admin-table"><tr><th>No.</th><th>Thread</th><th>Name</th><th>Body</th><th>Date</th><th></th></tr>';
+  allReplies.forEach(function(r) {
+    rhtml += '<tr>'
+      +'<td>'+r.id+'</td>'
+      +'<td>'+r.thread_id+'</td>'
+      +'<td>'+escHtml(r.name||'Anonymous')+'</td>'
+      +'<td>'+escHtml((r.body||'').slice(0,50))+'</td>'
+      +'<td>'+fmtTime(new Date(r.created_at).getTime())+'</td>'
+      +'<td><button class="admin-del-btn" onclick="adminDeleteReply('+r.id+')">delete</button></td>'
+      +'</tr>';
+  });
+  rhtml += '</table>';
+  document.getElementById('admin-replies-list').innerHTML = rhtml;
+
+  // users table
+  var uhtml = '<table class="admin-table"><tr><th>ID</th><th>Username</th><th>Joined</th><th></th></tr>';
+  allUsers.forEach(function(u) {
+    uhtml += '<tr>'
+      +'<td>'+u.id+'</td>'
+      +'<td>'+escHtml(u.username)+'</td>'
+      +'<td>'+fmtTime(new Date(u.created_at).getTime())+'</td>'
+      +'<td>'+(u.username !== 'Admin' ? '<button class="admin-del-btn" onclick="adminDeleteUser('+u.id+')">delete</button>' : '&mdash;')+'</td>'
+      +'</tr>';
+  });
+  uhtml += '</table>';
+  document.getElementById('admin-users-list').innerHTML = uhtml;
+}
+
+function adminTab(tab) {
+  ['threads','replies','users'].forEach(function(t) {
+    document.getElementById('admin-'+t+'-panel').style.display = t === tab ? '' : 'none';
+  });
+  document.querySelectorAll('.admin-tab').forEach(function(el, i) {
+    el.classList.toggle('active', ['threads','replies','users'][i] === tab);
+  });
+}
+
+async function adminDeleteThread(id) {
+  if (!confirm('Delete thread No.'+id+' and all its replies?')) return;
+  await fetch(SUPABASE_URL+'/rest/v1/replies?thread_id=eq.'+id, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY }
+  });
+  await fetch(SUPABASE_URL+'/rest/v1/threads?id=eq.'+id, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY }
+  });
+  threads = threads.filter(function(t){ return t.id !== id; });
+  renderFeed();
+  await loadAdminData();
+}
+
+async function adminDeleteReply(id) {
+  if (!confirm('Delete reply No.'+id+'?')) return;
+  await fetch(SUPABASE_URL+'/rest/v1/replies?id=eq.'+id, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY }
+  });
+  threads.forEach(function(t){
+    t.replies = t.replies.filter(function(r){ return r.id !== id; });
+  });
+  renderFeed();
+  await loadAdminData();
+}
+
+async function adminDeleteUser(id) {
+  if (!confirm('Delete user ID '+id+'? This does not delete their posts.')) return;
+  await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+id, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY }
+  });
+  await loadAdminData();
+}
 
 loadSession();
 loadAll();

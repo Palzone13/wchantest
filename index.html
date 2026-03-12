@@ -56,24 +56,30 @@ a:hover { color: #dd0000; }
   padding: 4px 8px;
   font-size: 12px;
   text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#boardnav span { margin: 0 2px; }
-
-#boardnav a {
-  color: #34345c;
-  font-weight: bold;
-  padding: 1px 4px;
-  text-decoration: none;
-  border: 1px solid transparent;
+#boardnav-links { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; justify-content: center; flex: 1; }
+#boardnav-links span { margin: 0 2px; }
+#boardnav-links a {
+  color: #34345c; font-weight: bold; padding: 1px 4px;
+  text-decoration: none; border: 1px solid transparent;
+}
+#boardnav-links a:hover, #boardnav-links a.active {
+  background: #800000; color: #fff; border-color: #600; text-decoration: none;
 }
 
-#boardnav a:hover, #boardnav a.active {
-  background: #800000;
-  color: #fff;
-  border-color: #600;
-  text-decoration: none;
+#userbar {
+  font-size: 11px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+
+#userbar a { font-size: 11px; }
 
 #wrap {
   max-width: 900px;
@@ -82,110 +88,69 @@ a:hover { color: #dd0000; }
 }
 
 .board-title-bar {
-  background: #800000;
-  color: #fff;
-  padding: 3px 8px;
-  font-weight: bold;
-  font-size: 13px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: #800000; color: #fff; padding: 3px 8px;
+  font-weight: bold; font-size: 13px; margin-bottom: 8px;
+  display: flex; justify-content: space-between; align-items: center;
 }
+.board-title-bar a { color: #ffdddd; font-size: 11px; font-weight: normal; cursor: pointer; text-decoration: underline; }
 
-.board-title-bar a {
-  color: #ffdddd;
-  font-size: 11px;
-  font-weight: normal;
-  cursor: pointer;
-  text-decoration: underline;
+/* FORMS */
+#postform-wrap, #auth-wrap, #profile-wrap {
+  background: #ffffee; border: 1px solid #800000;
+  padding: 8px 12px; margin-bottom: 10px; display: none;
 }
+#postform-wrap.open, #auth-wrap.open, #profile-wrap.open { display: block; }
 
-#postform-wrap {
-  background: #ffffee;
-  border: 1px solid #800000;
-  padding: 8px 12px;
-  margin-bottom: 10px;
-  display: none;
-}
-
-#postform-wrap.open { display: block; }
-
-#postform-wrap h3 {
-  font-size: 13px;
-  color: #800000;
-  margin-bottom: 6px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 4px;
+#postform-wrap h3, #auth-wrap h3, #profile-wrap h3 {
+  font-size: 13px; color: #800000; margin-bottom: 6px;
+  border-bottom: 1px solid #ccc; padding-bottom: 4px;
 }
 
 .form-table { width: 100%; border-collapse: collapse; }
 .form-table td { padding: 3px 4px; vertical-align: top; }
-.form-table td:first-child {
-  font-weight: bold;
-  width: 80px;
-  color: #555;
-  font-size: 12px;
-  padding-top: 5px;
+.form-table td:first-child { font-weight: bold; width: 80px; color: #555; font-size: 12px; padding-top: 5px; }
+.form-table input[type=text], .form-table input[type=password], .form-table textarea, .form-table select {
+  font-family: Arial, sans-serif; font-size: 12px; border: 1px solid #aaa;
+  padding: 2px 4px; background: #fff; width: 100%;
 }
-
-.form-table input[type=text],
-.form-table textarea,
-.form-table select {
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  border: 1px solid #aaa;
-  padding: 2px 4px;
-  background: #fff;
-  width: 100%;
-}
-
 .form-table textarea { height: 80px; resize: vertical; }
 
 .submit-btn {
-  background: #800000;
-  color: #fff;
-  border: 1px solid #600;
-  padding: 3px 14px;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  font-family: Arial, sans-serif;
+  background: #800000; color: #fff; border: 1px solid #600;
+  padding: 3px 14px; font-size: 12px; font-weight: bold;
+  cursor: pointer; font-family: Arial, sans-serif;
 }
-
 .submit-btn:hover { background: #a00000; }
+.submit-btn:disabled { background: #aaa; border-color: #999; cursor: default; }
 
 .form-note { font-size: 11px; color: #888; margin-top: 4px; }
+.form-err { font-size: 11px; color: #cc0000; margin-top: 4px; display: none; }
+.form-err.show { display: block; }
 
-.thread {
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px dotted #aaa;
+/* AUTH TABS */
+.auth-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+.auth-tab {
+  font-size: 12px; padding: 2px 10px; border: 1px solid #aaa;
+  background: #e0e0d0; cursor: pointer; font-family: Arial, sans-serif;
 }
+.auth-tab.active { background: #800000; color: #fff; border-color: #600; }
 
-.thread-op {
-  background: #f0e0d6;
-  border: 1px solid #d9bfb7;
-  padding: 4px 6px;
-}
+/* THREADS */
+.thread { margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dotted #aaa; }
+
+.thread-op { background: #f0e0d6; border: 1px solid #d9bfb7; padding: 4px 6px; }
 
 .post-header { margin-bottom: 3px; line-height: 1.4; }
-
 .post-subject { color: #cc1105; font-weight: bold; font-size: 14px; }
 .post-name { color: #117743; font-weight: bold; }
+.post-name.registered { color: #34345c; }
+.post-name.registered::after { content: ' ★'; font-size: 10px; color: #800000; }
 .post-time { color: #555; font-size: 11px; }
 .post-no { color: #34345c; font-size: 11px; }
 .post-no a { color: #34345c; text-decoration: none; font-size: 11px; }
 .post-no a:hover { text-decoration: underline; color: #dd0000; }
 
-.post-body {
-  font-size: 13px;
-  line-height: 1.6;
-  margin: 4px 0;
-  word-break: break-word;
-  white-space: pre-wrap;
-}
-
+.post-body { font-size: 13px; line-height: 1.6; margin: 4px 0; word-break: break-word; white-space: pre-wrap; }
 .greentext { color: #789922; }
 
 .post-actions { margin-top: 4px; font-size: 11px; color: #888; }
@@ -195,85 +160,55 @@ a:hover { color: #dd0000; }
 .replies.open { display: block; }
 
 .reply-post {
-  background: #d6daf0;
-  border: 1px solid #b7c5d9;
-  padding: 4px 6px;
-  margin-top: 4px;
-  display: inline-block;
-  width: 100%;
+  background: #d6daf0; border: 1px solid #b7c5d9;
+  padding: 4px 6px; margin-top: 4px; display: inline-block; width: 100%;
 }
 
-.reply-input-row {
-  display: flex;
-  gap: 4px;
-  margin-top: 6px;
-  padding-left: 20px;
-}
-
+.reply-input-row { display: flex; gap: 4px; margin-top: 6px; padding-left: 20px; }
 .reply-input-row textarea {
-  flex: 1;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  border: 1px solid #aaa;
-  padding: 3px 5px;
-  background: #fff;
-  height: 50px;
-  resize: vertical;
+  flex: 1; font-family: Arial, sans-serif; font-size: 12px;
+  border: 1px solid #aaa; padding: 3px 5px; background: #fff; height: 50px; resize: vertical;
 }
-
 .reply-input-row button {
-  background: #34345c;
-  color: #fff;
-  border: 1px solid #222;
-  padding: 0 10px;
-  font-size: 11px;
-  font-family: Arial, sans-serif;
-  cursor: pointer;
-  font-weight: bold;
-  align-self: flex-start;
-  height: 26px;
+  background: #34345c; color: #fff; border: 1px solid #222;
+  padding: 0 10px; font-size: 11px; font-family: Arial, sans-serif;
+  cursor: pointer; font-weight: bold; align-self: flex-start; height: 26px;
 }
-
 .reply-input-row button:hover { background: #555; }
+.reply-input-row button:disabled { background: #aaa; cursor: default; }
 
-.omitted {
-  font-size: 11px;
-  color: #888;
-  padding-left: 20px;
-  margin-top: 3px;
-  font-style: italic;
-}
+.omitted { font-size: 11px; color: #888; padding-left: 20px; margin-top: 3px; font-style: italic; }
 
 #statsbar {
-  background: #ffffee;
-  border: 1px solid #ccc;
-  padding: 3px 8px;
-  font-size: 11px;
-  color: #555;
-  text-align: center;
-  margin-bottom: 8px;
+  background: #ffffee; border: 1px solid #ccc; padding: 3px 8px;
+  font-size: 11px; color: #555; text-align: center; margin-bottom: 8px;
 }
 
 .rules-box {
-  background: #ffffee;
-  border: 1px solid #ccc;
-  padding: 6px 10px;
-  font-size: 11px;
-  color: #555;
-  margin-bottom: 10px;
+  background: #ffffee; border: 1px solid #ccc; padding: 6px 10px;
+  font-size: 11px; color: #555; margin-bottom: 10px;
 }
-
 .rules-box b { color: #800000; }
 
-#footer {
-  text-align: center;
-  padding: 12px 4px 20px;
-  font-size: 11px;
-  color: #888;
-  border-top: 1px solid #aaa;
-  margin-top: 14px;
+/* PROFILE */
+.profile-box {
+  background: #f0e0d6; border: 1px solid #d9bfb7; padding: 8px 10px; margin-bottom: 8px;
 }
+.profile-stat { font-size: 12px; margin-bottom: 3px; }
+.profile-stat b { color: #34345c; }
+.profile-posts { margin-top: 8px; }
+.profile-post-item {
+  background: #ffffee; border: 1px solid #ccc; padding: 4px 6px;
+  margin-bottom: 4px; font-size: 12px;
+}
+.profile-post-item .pp-subject { color: #cc1105; font-weight: bold; }
+.profile-post-item .pp-time { color: #888; font-size: 11px; }
+.profile-post-item .pp-preview { color: #333; margin-top: 2px; font-size: 12px; }
 
+#footer {
+  text-align: center; padding: 12px 4px 20px; font-size: 11px;
+  color: #888; border-top: 1px solid #aaa; margin-top: 14px;
+}
 #footer a { color: #34345c; }
 </style>
 </head>
@@ -287,24 +222,76 @@ a:hover { color: #dd0000; }
 </div>
 
 <div id="boardnav">
-  <span>[</span>
-  <a onclick="filterBoard('all')" class="active" id="tab-all">all</a> /
-  <a onclick="filterBoard('b')" id="tab-b">b</a> /
-  <a onclick="filterBoard('tech')" id="tab-tech">tech</a> /
-  <a onclick="filterBoard('g')" id="tab-g">g</a> /
-  <a onclick="filterBoard('a')" id="tab-a">a</a> /
-  <a onclick="filterBoard('sci')" id="tab-sci">sci</a> /
-  <a onclick="filterBoard('pol')" id="tab-pol">pol</a> /
-  <a onclick="filterBoard('fit')" id="tab-fit">fit</a>
-  <span>]</span>
+  <div id="boardnav-links">
+    <span>[</span>
+    <a onclick="filterBoard('all')" class="active" id="tab-all">all</a> /
+    <a onclick="filterBoard('b')" id="tab-b">b</a> /
+    <a onclick="filterBoard('tech')" id="tab-tech">tech</a> /
+    <a onclick="filterBoard('g')" id="tab-g">g</a> /
+    <a onclick="filterBoard('a')" id="tab-a">a</a> /
+    <a onclick="filterBoard('sci')" id="tab-sci">sci</a> /
+    <a onclick="filterBoard('pol')" id="tab-pol">pol</a> /
+    <a onclick="filterBoard('fit')" id="tab-fit">fit</a>
+    <span>]</span>
+  </div>
+  <div id="userbar">
+    <span id="userbar-guest">[ <a onclick="openAuth('login')">login</a> / <a onclick="openAuth('register')">register</a> ]</span>
+    <span id="userbar-loggedin" style="display:none">[ <a onclick="openProfile()">profile</a> | <a onclick="logout()">logout</a> ]</span>
+  </div>
 </div>
 
 <div id="wrap">
 
   <div id="statsbar">
     Users online: <b id="online-count">312</b> &nbsp;|&nbsp;
-    Posts today: <b id="stat-posts">8,847</b> &nbsp;|&nbsp;
-    Total threads: <b id="stat-threads">1,203</b>
+    Posts today: <b id="stat-posts">0</b> &nbsp;|&nbsp;
+    Total threads: <b id="stat-threads">0</b>
+  </div>
+
+  <!-- AUTH FORM -->
+  <div id="auth-wrap">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login-btn" onclick="switchAuthTab('login')">Login</button>
+      <button class="auth-tab" id="tab-register-btn" onclick="switchAuthTab('register')">Register</button>
+    </div>
+    <div id="auth-login">
+      <table class="form-table">
+        <tr><td>Username</td><td><input type="text" id="login-user"></td></tr>
+        <tr><td>Password</td><td><input type="password" id="login-pass"></td></tr>
+        <tr><td></td><td>
+          <button class="submit-btn" onclick="doLogin()">Login</button>
+          &nbsp;<span class="form-note">[<a onclick="closeAuth()">close</a>]</span>
+          <div class="form-err" id="login-err"></div>
+        </td></tr>
+      </table>
+    </div>
+    <div id="auth-register" style="display:none">
+      <table class="form-table">
+        <tr><td>Username</td><td><input type="text" id="reg-user"></td></tr>
+        <tr><td>Password</td><td><input type="password" id="reg-pass"></td></tr>
+        <tr><td>Confirm</td><td><input type="password" id="reg-pass2"></td></tr>
+        <tr><td></td><td>
+          <button class="submit-btn" onclick="doRegister()">Register</button>
+          &nbsp;<span class="form-note">[<a onclick="closeAuth()">close</a>]</span>
+          <div class="form-err" id="reg-err"></div>
+        </td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="profile-wrap">
+    <h3 id="profile-title">profile</h3>
+    <div class="profile-box">
+      <div class="profile-stat">Username: <b id="profile-username"></b></div>
+      <div class="profile-stat">Member since: <b id="profile-since"></b></div>
+      <div class="profile-stat">Total posts: <b id="profile-postcount"></b></div>
+    </div>
+    <div class="profile-posts">
+      <b style="font-size:12px;color:#800000">recent posts</b>
+      <div id="profile-posts-list" style="margin-top:6px"></div>
+    </div>
+    <div style="margin-top:8px"><span class="form-note">[<a onclick="closeProfile()">close</a>]</span></div>
   </div>
 
   <div class="rules-box">
@@ -312,13 +299,10 @@ a:hover { color: #dd0000; }
     &nbsp;&nbsp;<b>[ <a onclick="toggleForm()">+ New Thread</a> ]</b>
   </div>
 
+  <!-- NEW THREAD FORM -->
   <div id="postform-wrap">
     <h3>Post a new thread</h3>
     <table class="form-table">
-      <tr>
-        <td>Name</td>
-        <td><input type="text" id="new-name" style="width:200px"></td>
-      </tr>
       <tr>
         <td>Board</td>
         <td>
@@ -333,21 +317,12 @@ a:hover { color: #dd0000; }
           </select>
         </td>
       </tr>
-      <tr>
-        <td>Subject</td>
-        <td><input type="text" id="new-title" style="width:100%"></td>
-      </tr>
-      <tr>
-        <td>Comment</td>
-        <td><textarea id="new-content"></textarea></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td>
-          <button class="submit-btn" onclick="submitThread()">Submit</button>
-          &nbsp;<span class="form-note">[<a onclick="toggleForm()">close</a>]</span>
-        </td>
-      </tr>
+      <tr><td>Subject</td><td><input type="text" id="new-title" style="width:100%"></td></tr>
+      <tr><td>Comment</td><td><textarea id="new-content"></textarea></td></tr>
+      <tr><td></td><td>
+        <button class="submit-btn" onclick="submitThread()">Submit</button>
+        &nbsp;<span class="form-note">[<a onclick="toggleForm()">close</a>]</span>
+      </td></tr>
     </table>
   </div>
 
@@ -377,33 +352,27 @@ var SUPABASE_KEY = 'sb_publishable_c7jHjcNicXKabcFPCzKjyA_ViTc0-ti';
 var currentBoard = 'all';
 var currentSort = 'bump';
 var threads = [];
+var currentUser = null; // { id, username, created_at }
 
 var boardNames = {
-  b: '/b/ - Random',
-  tech: '/tech/ - Technology',
-  g: '/g/ - Gaming',
-  a: '/a/ - Anime',
-  sci: '/sci/ - Science',
-  pol: '/pol/ - Politics',
-  fit: '/fit/ - Fitness'
+  b: '/b/ - Random', tech: '/tech/ - Technology', g: '/g/ - Gaming',
+  a: '/a/ - Anime', sci: '/sci/ - Science', pol: '/pol/ - Politics', fit: '/fit/ - Fitness'
 };
 
-// ── SUPABASE HELPERS ────────────────────────────────────────────────────────
+// ── SUPABASE ─────────────────────────────────────────────────────────────────
 async function sbGet(path) {
-  var r = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  var r = await fetch(SUPABASE_URL+'/rest/v1/'+path, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY }
   });
   return r.json();
 }
 
 async function sbPost(table, body) {
-  var r = await fetch(SUPABASE_URL + '/rest/v1/' + table, {
+  var r = await fetch(SUPABASE_URL+'/rest/v1/'+table, {
     method: 'POST',
     headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
+      'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY,
+      'Content-Type': 'application/json', 'Prefer': 'return=representation'
     },
     body: JSON.stringify(body)
   });
@@ -412,18 +381,149 @@ async function sbPost(table, body) {
 }
 
 async function sbPatch(table, id, body) {
-  await fetch(SUPABASE_URL + '/rest/v1/' + table + '?id=eq.' + id, {
+  await fetch(SUPABASE_URL+'/rest/v1/'+table+'?id=eq.'+id, {
     method: 'PATCH',
     headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
   });
 }
 
-// ── LOAD ────────────────────────────────────────────────────────────────────
+// ── SESSION ──────────────────────────────────────────────────────────────────
+function saveSession(user) {
+  localStorage.setItem('wchan_user', JSON.stringify(user));
+  currentUser = user;
+  updateUserbar();
+}
+
+function loadSession() {
+  try {
+    var s = localStorage.getItem('wchan_user');
+    if (s) { currentUser = JSON.parse(s); updateUserbar(); }
+  } catch(e) {}
+}
+
+function logout() {
+  localStorage.removeItem('wchan_user');
+  currentUser = null;
+  updateUserbar();
+  closeProfile();
+}
+
+function updateUserbar() {
+  if (currentUser) {
+    document.getElementById('userbar-guest').style.display = 'none';
+    document.getElementById('userbar-loggedin').style.display = '';
+    document.getElementById('userbar-loggedin').innerHTML =
+      '[ <b style="color:#117743">'+escHtml(currentUser.username)+'</b> | <a onclick="openProfile()">profile</a> | <a onclick="logout()">logout</a> ]';
+  } else {
+    document.getElementById('userbar-guest').style.display = '';
+    document.getElementById('userbar-loggedin').style.display = 'none';
+  }
+}
+
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+function openAuth(tab) {
+  document.getElementById('auth-wrap').classList.add('open');
+  document.getElementById('profile-wrap').classList.remove('open');
+  document.getElementById('postform-wrap').classList.remove('open');
+  switchAuthTab(tab || 'login');
+}
+
+function closeAuth() {
+  document.getElementById('auth-wrap').classList.remove('open');
+}
+
+function switchAuthTab(tab) {
+  document.getElementById('auth-login').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('auth-register').style.display = tab === 'register' ? '' : 'none';
+  document.getElementById('tab-login-btn').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register-btn').classList.toggle('active', tab === 'register');
+}
+
+async function doLogin() {
+  var username = document.getElementById('login-user').value.trim();
+  var password = document.getElementById('login-pass').value;
+  var err = document.getElementById('login-err');
+  err.classList.remove('show');
+  if (!username || !password) { err.textContent = 'fill in all fields.'; err.classList.add('show'); return; }
+
+  var rows = await sbGet('users?username=eq.'+encodeURIComponent(username)+'&select=id,username,password,created_at');
+  if (!rows || rows.length === 0) { err.textContent = 'username not found.'; err.classList.add('show'); return; }
+  var user = rows[0];
+  if (user.password !== btoa(password)) { err.textContent = 'wrong password.'; err.classList.add('show'); return; }
+
+  saveSession({ id: user.id, username: user.username, created_at: user.created_at });
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  closeAuth();
+}
+
+async function doRegister() {
+  var username = document.getElementById('reg-user').value.trim();
+  var password = document.getElementById('reg-pass').value;
+  var password2 = document.getElementById('reg-pass2').value;
+  var err = document.getElementById('reg-err');
+  err.classList.remove('show');
+
+  if (!username || !password) { err.textContent = 'fill in all fields.'; err.classList.add('show'); return; }
+  if (username.length < 3) { err.textContent = 'username must be at least 3 characters.'; err.classList.add('show'); return; }
+  if (password.length < 4) { err.textContent = 'password must be at least 4 characters.'; err.classList.add('show'); return; }
+  if (password !== password2) { err.textContent = 'passwords do not match.'; err.classList.add('show'); return; }
+
+  var existing = await sbGet('users?username=eq.'+encodeURIComponent(username)+'&select=id');
+  if (existing && existing.length > 0) { err.textContent = 'username already taken.'; err.classList.add('show'); return; }
+
+  var saved = await sbPost('users', { username: username, password: btoa(password) });
+  if (!saved || !saved.id) { err.textContent = 'error creating account. try again.'; err.classList.add('show'); return; }
+
+  saveSession({ id: saved.id, username: saved.username, created_at: saved.created_at });
+  document.getElementById('reg-user').value = '';
+  document.getElementById('reg-pass').value = '';
+  document.getElementById('reg-pass2').value = '';
+  closeAuth();
+}
+
+// ── PROFILE ──────────────────────────────────────────────────────────────────
+async function openProfile() {
+  if (!currentUser) { openAuth('login'); return; }
+  document.getElementById('profile-wrap').classList.add('open');
+  document.getElementById('auth-wrap').classList.remove('open');
+  document.getElementById('postform-wrap').classList.remove('open');
+
+  document.getElementById('profile-title').textContent = 'profile: '+currentUser.username;
+  document.getElementById('profile-username').textContent = currentUser.username;
+  document.getElementById('profile-since').textContent = fmtTime(new Date(currentUser.created_at).getTime());
+
+  var userThreads = await sbGet('threads?user_id=eq.'+currentUser.id+'&order=created_at.desc&limit=10');
+  var userReplies = await sbGet('replies?user_id=eq.'+currentUser.id+'&select=id&limit=1000');
+  var totalPosts = (userThreads ? userThreads.length : 0) + (userReplies ? userReplies.length : 0);
+  document.getElementById('profile-postcount').textContent = totalPosts;
+
+  var list = document.getElementById('profile-posts-list');
+  list.innerHTML = '';
+  if (!userThreads || userThreads.length === 0) {
+    list.innerHTML = '<div style="font-size:11px;color:#888">no threads yet.</div>';
+  } else {
+    userThreads.forEach(function(t) {
+      var el = document.createElement('div');
+      el.className = 'profile-post-item';
+      el.innerHTML = '<span class="pp-subject">'+escHtml(t.subject)+'</span>'
+        +' <span style="font-size:11px;color:#888">['+escHtml(t.board)+']</span>'
+        +' <span class="pp-time">'+fmtTime(new Date(t.created_at).getTime())+'</span>'
+        +'<div class="pp-preview">'+escHtml((t.body||'').slice(0,120))+(t.body && t.body.length > 120 ? '...' : '')+'</div>';
+      list.appendChild(el);
+    });
+  }
+}
+
+function closeProfile() {
+  document.getElementById('profile-wrap').classList.remove('open');
+}
+
+// ── LOAD ─────────────────────────────────────────────────────────────────────
 async function loadAll() {
   var feed = document.getElementById('thread-feed');
   feed.innerHTML = '<i style="color:#888;font-size:12px">loading...</i>';
@@ -431,29 +531,25 @@ async function loadAll() {
   var rawThreads = await sbGet('threads?order=bump.desc');
   var rawReplies = await sbGet('replies?order=created_at.asc');
 
-  threads = rawThreads.map(function(t) {
+  threads = (rawThreads||[]).map(function(t) {
     return {
-      id: t.id,
-      board: t.board,
-      subject: t.subject,
-      body: t.body,
-      name: t.name || 'Anonymous',
+      id: t.id, board: t.board, subject: t.subject, body: t.body,
+      name: t.name || 'Anonymous', registered: !!t.user_id,
       time: new Date(t.created_at).getTime(),
       bump: t.bump || new Date(t.created_at).getTime(),
-      replies: rawReplies.filter(function(r){ return r.thread_id === t.id; }).map(function(r){
-        return { id: r.id, name: r.name || 'Anonymous', body: r.body, time: new Date(r.created_at).getTime() };
+      replies: (rawReplies||[]).filter(function(r){ return r.thread_id === t.id; }).map(function(r){
+        return { id: r.id, name: r.name || 'Anonymous', registered: !!r.user_id, body: r.body, time: new Date(r.created_at).getTime() };
       })
     };
   });
 
   renderFeed();
-
-  var total = threads.reduce(function(n,t){ return n + t.replies.length; }, 0) + threads.length;
+  var total = threads.reduce(function(n,t){ return n+t.replies.length; }, 0) + threads.length;
   document.getElementById('stat-posts').textContent = total.toLocaleString();
   document.getElementById('stat-threads').textContent = threads.length.toLocaleString();
 }
 
-// ── RENDER ──────────────────────────────────────────────────────────────────
+// ── RENDER ────────────────────────────────────────────────────────────────────
 function fmtTime(ts) {
   var d = new Date(ts);
   var mo = d.getMonth()+1, dy = d.getDate(), yr = String(d.getFullYear()).slice(-2);
@@ -469,11 +565,13 @@ function escHtml(s) {
 
 function renderBody(text) {
   return escHtml(text).split('\n').map(function(line) {
-    if (line.charAt(0) === '&' && line.slice(0,4) === '&gt;') {
-      return '<span class="greentext">'+line+'</span>';
-    }
+    if (line.charAt(0) === '&' && line.slice(0,4) === '&gt;') return '<span class="greentext">'+line+'</span>';
     return line;
   }).join('<br>');
+}
+
+function nameHtml(name, registered) {
+  return '<span class="post-name'+(registered?' registered':'')+'">'+escHtml(name)+'</span>';
 }
 
 function getSortedThreads() {
@@ -507,8 +605,7 @@ function buildThread(t) {
 
   var repliesHtml = showReplies.map(function(r){
     return '<div class="reply-post" id="post-'+r.id+'">'
-      +'<div class="post-header">'
-      +'<span class="post-name">'+escHtml(r.name)+'</span> '
+      +'<div class="post-header">'+nameHtml(r.name, r.registered)+' '
       +'<span class="post-time">'+fmtTime(r.time)+'</span> '
       +'<span class="post-no">No.<a onclick="quotePost('+t.id+','+r.id+')">'+r.id+'</a></span>'
       +'</div>'
@@ -523,7 +620,7 @@ function buildThread(t) {
   div.innerHTML = '<div class="thread-op">'
     +'<div class="post-header">'
     +'<span class="post-subject">'+escHtml(t.subject)+'</span>&nbsp; '
-    +'<span class="post-name">'+escHtml(t.name)+'</span>&nbsp; '
+    +nameHtml(t.name, t.registered)+'&nbsp; '
     +'<span class="post-time">'+fmtTime(t.time)+'</span>&nbsp; '
     +'<span class="post-no">No.<a onclick="quotePost('+t.id+','+t.id+')">'+t.id+'</a></span>&nbsp;'
     +'<span style="font-size:11px;color:#888;">['+escHtml(t.board)+']</span>'
@@ -544,7 +641,7 @@ function buildThread(t) {
   return div;
 }
 
-// ── INTERACTIONS ─────────────────────────────────────────────────────────────
+// ── INTERACTIONS ──────────────────────────────────────────────────────────────
 function toggleReplies(id) {
   var sec = document.getElementById('replies-'+id);
   var row = document.getElementById('replyrow-'+id);
@@ -555,10 +652,7 @@ function toggleReplies(id) {
 function quotePost(threadId, postId) {
   var sec = document.getElementById('replies-'+threadId);
   var row = document.getElementById('replyrow-'+threadId);
-  if (!sec.classList.contains('open')) {
-    sec.classList.add('open');
-    row.style.display = 'flex';
-  }
+  if (!sec.classList.contains('open')) { sec.classList.add('open'); row.style.display = 'flex'; }
   var inp = document.getElementById('reply-input-'+threadId);
   inp.value = (inp.value ? inp.value+'\n' : '')+'>>'+postId+'\n';
   inp.focus();
@@ -570,28 +664,25 @@ async function submitReply(id) {
   if (!text) return;
 
   var btn = inp.nextElementSibling;
-  btn.disabled = true;
-  btn.textContent = '...';
+  btn.disabled = true; btn.textContent = '...';
 
-  var name = 'Anonymous';
-  var saved = await sbPost('replies', { thread_id: id, body: text, name: name });
+  var postData = { thread_id: id, body: text, name: currentUser ? currentUser.username : 'Anonymous' };
+  if (currentUser) postData.user_id = currentUser.id;
 
-  // bump thread
+  var saved = await sbPost('replies', postData);
   await sbPatch('threads', id, { bump: Date.now() });
 
   var t = threads.find(function(x){ return x.id===id; });
-  var reply = { id: saved.id, name: name, body: text, time: new Date(saved.created_at).getTime() };
+  var reply = { id: saved.id, name: postData.name, registered: !!currentUser, body: text, time: new Date(saved.created_at).getTime() };
   t.replies.push(reply);
   t.bump = Date.now();
   inp.value = '';
-  btn.disabled = false;
-  btn.textContent = 'Post';
+  btn.disabled = false; btn.textContent = 'Post';
 
   var list = document.getElementById('replies-'+id);
   var tmp = document.createElement('div');
   tmp.innerHTML = '<div class="reply-post" id="post-'+reply.id+'">'
-    +'<div class="post-header">'
-    +'<span class="post-name">'+escHtml(name)+'</span> '
+    +'<div class="post-header">'+nameHtml(reply.name, reply.registered)+' '
     +'<span class="post-time">'+fmtTime(reply.time)+'</span> '
     +'<span class="post-no">No.<a onclick="quotePost('+id+','+reply.id+')">'+reply.id+'</a></span>'
     +'</div>'
@@ -605,20 +696,19 @@ async function submitReply(id) {
 
 function filterBoard(board) {
   currentBoard = board;
-  document.querySelectorAll('#boardnav a').forEach(function(a){ a.classList.remove('active'); });
+  document.querySelectorAll('#boardnav-links a').forEach(function(a){ a.classList.remove('active'); });
   var el = document.getElementById('tab-'+board);
   if (el) el.classList.add('active');
   renderFeed();
 }
 
-function sortThreads(sort) {
-  currentSort = sort;
-  renderFeed();
-}
+function sortThreads(sort) { currentSort = sort; renderFeed(); }
 
 function toggleForm() {
   var f = document.getElementById('postform-wrap');
   f.classList.toggle('open');
+  document.getElementById('auth-wrap').classList.remove('open');
+  document.getElementById('profile-wrap').classList.remove('open');
   if (f.classList.contains('open')) document.getElementById('new-title').focus();
 }
 
@@ -626,28 +716,31 @@ async function submitThread() {
   var subject = document.getElementById('new-title').value.trim();
   var body = document.getElementById('new-content').value.trim();
   var board = document.getElementById('new-board').value;
-  var name = document.getElementById('new-name').value.trim() || 'Anonymous';
   if (!subject || !body) { alert('Subject and comment required.'); return; }
 
   var btn = document.querySelector('#postform-wrap .submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Posting...';
+  btn.disabled = true; btn.textContent = 'Posting...';
 
-  var saved = await sbPost('threads', { board: board, subject: subject, body: body, name: name, bump: Date.now() });
+  var postData = {
+    board: board, subject: subject, body: body, bump: Date.now(),
+    name: currentUser ? currentUser.username : 'Anonymous'
+  };
+  if (currentUser) postData.user_id = currentUser.id;
+
+  var saved = await sbPost('threads', postData);
 
   var t = {
     id: saved.id, board: board, subject: subject, body: body,
-    name: name, time: new Date(saved.created_at).getTime(),
-    bump: saved.bump, replies: []
+    name: postData.name, registered: !!currentUser,
+    time: new Date(saved.created_at).getTime(), bump: saved.bump, replies: []
   };
   threads.unshift(t);
   renderFeed();
 
-  ['new-title','new-content','new-name'].forEach(function(x){ document.getElementById(x).value=''; });
+  document.getElementById('new-title').value = '';
+  document.getElementById('new-content').value = '';
   document.getElementById('postform-wrap').classList.remove('open');
-  btn.disabled = false;
-  btn.textContent = 'Submit';
-
+  btn.disabled = false; btn.textContent = 'Submit';
   document.getElementById('stat-threads').textContent = threads.length.toLocaleString();
 
   setTimeout(function(){
@@ -656,20 +749,22 @@ async function submitThread() {
   }, 80);
 }
 
-function reportThread(id) {
-  alert('Thread No.'+id+' reported. Mods notified.');
-}
+function reportThread(id) { alert('Thread No.'+id+' reported. Mods notified.'); }
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') document.getElementById('postform-wrap').classList.remove('open');
+  if (e.key === 'Escape') {
+    document.getElementById('postform-wrap').classList.remove('open');
+    document.getElementById('auth-wrap').classList.remove('open');
+    document.getElementById('profile-wrap').classList.remove('open');
+  }
 });
 
 setInterval(function() {
   var el = document.getElementById('online-count');
-  var cur = parseInt(el.textContent);
-  el.textContent = cur + Math.floor(Math.random()*5) - 2;
+  el.textContent = parseInt(el.textContent) + Math.floor(Math.random()*5) - 2;
 }, 9000);
 
+loadSession();
 loadAll();
 </script>
 </body>

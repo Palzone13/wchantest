@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>wchan - imageboard</title>
+<title>palopedia - imageboard</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: #d9d9c3;
+  background: #e8e8e8;
   color: #000;
   font-family: Arial, sans-serif;
   font-size: 13px;
@@ -18,22 +18,22 @@ a { color: #34345c; text-decoration: underline; cursor: pointer; }
 a:hover { color: #dd0000; }
 
 #topbar {
-  background: #800000; color: #fff; text-align: center;
+  background: #cc5500; color: #fff; text-align: center;
   padding: 2px 0; font-size: 11px; font-weight: bold; letter-spacing: 1px;
 }
 
 #header {
-  background: #ffffee; border-bottom: 3px solid #800000;
+  background: #ffffff; border-bottom: 3px solid #cc5500;
   text-align: center; padding: 10px 4px 6px;
 }
 #header h1 {
-  font-family: "Times New Roman", serif; font-size: 36px; color: #800000;
+  font-family: "Times New Roman", serif; font-size: 36px; color: #cc5500;
   letter-spacing: 2px; text-shadow: 2px 2px 0 #ccc; line-height: 1;
 }
 #header .tagline { font-size: 11px; color: #888; margin-top: 2px; font-style: italic; }
 
 #boardnav {
-  background: #ffffee; border-bottom: 1px solid #800000;
+  background: #ffffff; border-bottom: 1px solid #cc5500;
   padding: 4px 8px; font-size: 12px; text-align: center;
   display: flex; justify-content: space-between; align-items: center;
 }
@@ -44,7 +44,7 @@ a:hover { color: #dd0000; }
   text-decoration: none; border: 1px solid transparent;
 }
 #boardnav-links a:hover, #boardnav-links a.active {
-  background: #800000; color: #fff; border-color: #600; text-decoration: none;
+  background: #cc5500; color: #fff; border-color: #aa3300; text-decoration: none;
 }
 #userbar { font-size: 11px; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
 #userbar a { font-size: 11px; }
@@ -52,17 +52,17 @@ a:hover { color: #dd0000; }
 #wrap { max-width: 900px; margin: 0 auto; padding: 8px 4px; }
 
 .board-title-bar {
-  background: #800000; color: #fff; padding: 3px 8px; font-weight: bold;
+  background: #cc5500; color: #fff; padding: 3px 8px; font-weight: bold;
   font-size: 13px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
 }
 .board-title-bar a { color: #ffdddd; font-size: 11px; font-weight: normal; cursor: pointer; text-decoration: underline; }
 
 #postform-wrap, #auth-wrap, #profile-wrap {
-  background: #ffffee; border: 1px solid #800000; padding: 8px 12px; margin-bottom: 10px; display: none;
+  background: #ffffff; border: 1px solid #cc5500; padding: 8px 12px; margin-bottom: 10px; display: none;
 }
 #postform-wrap.open, #auth-wrap.open, #profile-wrap.open { display: block; }
 #postform-wrap h3, #auth-wrap h3, #profile-wrap h3 {
-  font-size: 13px; color: #800000; margin-bottom: 6px; border-bottom: 1px solid #ccc; padding-bottom: 4px;
+  font-size: 13px; color: #cc5500; margin-bottom: 6px; border-bottom: 1px solid #ccc; padding-bottom: 4px;
 }
 
 .form-table { width: 100%; border-collapse: collapse; }
@@ -76,16 +76,16 @@ a:hover { color: #dd0000; }
   font-family: Arial, sans-serif; font-size: 12px; border: 1px solid #aaa;
   padding: 2px 4px; background: #fff; width: 100%;
 }
-.form-table input[type=file] { background: #f5f5e8; padding: 2px; }
+.form-table input[type=file] { background: #ffffff; padding: 2px; }
 .form-table textarea { height: 80px; resize: vertical; }
 
 .file-note { font-size: 10px; color: #888; margin-top: 2px; }
 
 .submit-btn {
-  background: #800000; color: #fff; border: 1px solid #600; padding: 3px 14px;
+  background: #cc5500; color: #fff; border: 1px solid #aa3300; padding: 3px 14px;
   font-size: 12px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif;
 }
-.submit-btn:hover { background: #a00000; }
+.submit-btn:hover { background: #dd6600; }
 .submit-btn:disabled { background: #aaa; border-color: #999; cursor: default; }
 
 .form-note { font-size: 11px; color: #888; margin-top: 4px; }
@@ -95,18 +95,18 @@ a:hover { color: #dd0000; }
 .auth-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
 .auth-tab {
   font-size: 12px; padding: 2px 10px; border: 1px solid #aaa;
-  background: #e0e0d0; cursor: pointer; font-family: Arial, sans-serif;
+  background: #f0f0f0; cursor: pointer; font-family: Arial, sans-serif;
 }
-.auth-tab.active { background: #800000; color: #fff; border-color: #600; }
+.auth-tab.active { background: #cc5500; color: #fff; border-color: #aa3300; }
 
 .thread { margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dotted #aaa; }
-.thread-op { background: #f0e0d6; border: 1px solid #d9bfb7; padding: 4px 6px; }
+.thread-op { background: #fff0e8; border: 1px solid #d9bfb7; padding: 4px 6px; }
 
 .post-header { margin-bottom: 3px; line-height: 1.4; }
-.post-subject { color: #cc1105; font-weight: bold; font-size: 14px; }
+.post-subject { color: #dd6600; font-weight: bold; font-size: 14px; }
 .post-name { color: #117743; font-weight: bold; }
 .post-name.registered { color: #34345c; }
-.post-name.registered::after { content: ' ★'; font-size: 10px; color: #800000; }
+.post-name.registered::after { content: ' ★'; font-size: 10px; color: #cc5500; }
 .post-time { color: #555; font-size: 11px; }
 .post-no { color: #34345c; font-size: 11px; }
 .post-no a { color: #34345c; text-decoration: none; font-size: 11px; }
@@ -148,7 +148,7 @@ a:hover { color: #dd0000; }
   flex: 1; font-family: Arial, sans-serif; font-size: 12px;
   border: 1px solid #aaa; padding: 3px 5px; background: #fff; height: 50px; resize: vertical;
 }
-.reply-file-input { font-size: 11px; border: 1px solid #aaa; background: #f5f5e8; padding: 2px; font-family: Arial, sans-serif; }
+.reply-file-input { font-size: 11px; border: 1px solid #aaa; background: #ffffff; padding: 2px; font-family: Arial, sans-serif; }
 .reply-post-btn {
   background: #34345c; color: #fff; border: 1px solid #222; padding: 0 10px;
   font-size: 11px; font-family: Arial, sans-serif; cursor: pointer; font-weight: bold; height: 26px;
@@ -159,27 +159,27 @@ a:hover { color: #dd0000; }
 .omitted { font-size: 11px; color: #888; padding-left: 20px; margin-top: 3px; font-style: italic; }
 
 /* UPLOAD PROGRESS */
-.upload-progress { font-size: 11px; color: #800000; margin-top: 3px; display: none; }
+.upload-progress { font-size: 11px; color: #cc5500; margin-top: 3px; display: none; }
 .upload-progress.show { display: block; }
 
 #statsbar {
-  background: #ffffee; border: 1px solid #ccc; padding: 3px 8px;
+  background: #ffffff; border: 1px solid #ccc; padding: 3px 8px;
   font-size: 11px; color: #555; text-align: center; margin-bottom: 8px;
 }
 
 .rules-box {
-  background: #ffffee; border: 1px solid #ccc; padding: 6px 10px;
+  background: #ffffff; border: 1px solid #ccc; padding: 6px 10px;
   font-size: 11px; color: #555; margin-bottom: 10px;
 }
-.rules-box b { color: #800000; }
+.rules-box b { color: #cc5500; }
 
-.profile-box { background: #f0e0d6; border: 1px solid #d9bfb7; padding: 8px 10px; margin-bottom: 8px; }
+.profile-box { background: #fff0e8; border: 1px solid #d9bfb7; padding: 8px 10px; margin-bottom: 8px; }
 .profile-stat { font-size: 12px; margin-bottom: 3px; }
 .profile-stat b { color: #34345c; }
 .profile-post-item {
-  background: #ffffee; border: 1px solid #ccc; padding: 4px 6px; margin-bottom: 4px; font-size: 12px;
+  background: #ffffff; border: 1px solid #ccc; padding: 4px 6px; margin-bottom: 4px; font-size: 12px;
 }
-.profile-post-item .pp-subject { color: #cc1105; font-weight: bold; }
+.profile-post-item .pp-subject { color: #dd6600; font-weight: bold; }
 .profile-post-item .pp-time { color: #888; font-size: 11px; }
 .profile-post-item .pp-preview { color: #333; margin-top: 2px; font-size: 12px; }
 
@@ -200,11 +200,11 @@ a:hover { color: #dd0000; }
 </head>
 <body>
 
-<div id="topbar">[ wchan.net ] &mdash; read the rules &mdash; no personal info &mdash; stay anonymous</div>
+<div id="topbar">[ palopedia.net ] &mdash; read the rules &mdash; no personal info &mdash; stay anonymous</div>
 
 <div id="header">
-  <h1>wchan</h1>
-  <div class="tagline">text boards &bull; est. 2003 &bull; owned by nobody</div>
+  <h1>palopedia</h1>
+  <div class="tagline">text boards &bull; est. 2026 &bull; owned by p4l</div>
 </div>
 
 <div id="boardnav">
@@ -273,7 +273,7 @@ a:hover { color: #dd0000; }
       <div class="profile-stat">Member since: <b id="profile-since"></b></div>
       <div class="profile-stat">Total posts: <b id="profile-postcount"></b></div>
     </div>
-    <div><b style="font-size:12px;color:#800000">recent threads</b>
+    <div><b style="font-size:12px;color:#cc5500">recent threads</b>
       <div id="profile-posts-list" style="margin-top:6px"></div>
     </div>
     <div style="margin-top:8px"><span class="form-note">[<a onclick="closeProfile()">close</a>]</span></div>
@@ -331,8 +331,8 @@ a:hover { color: #dd0000; }
   <div id="thread-feed"></div>
 
   <div id="footer">
-    wchan.net &mdash; all content posted is the responsibility of the poster &mdash; <a href="#">rules</a> &mdash; <a href="#">contact</a><br>
-    &copy; 2003&ndash;2009 wchan &mdash; delete cookies | report a post<br>
+    palopedia.net &mdash; all content posted is the responsibility of the poster &mdash; <a href="#">rules</a> &mdash; <a href="#">contact</a><br>
+    &copy; 2026 palopedia &mdash; delete cookies | report a post<br>
     <span style="color:#aaa">Page generated in 0.031s &mdash; 147 queries</span>
   </div>
 

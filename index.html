@@ -18,49 +18,25 @@ a { color: #34345c; text-decoration: underline; cursor: pointer; }
 a:hover { color: #dd0000; }
 
 #topbar {
-  background: #800000;
-  color: #fff;
-  text-align: center;
-  padding: 2px 0;
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 1px;
+  background: #800000; color: #fff; text-align: center;
+  padding: 2px 0; font-size: 11px; font-weight: bold; letter-spacing: 1px;
 }
 
 #header {
-  background: #ffffee;
-  border-bottom: 3px solid #800000;
-  text-align: center;
-  padding: 10px 4px 6px;
+  background: #ffffee; border-bottom: 3px solid #800000;
+  text-align: center; padding: 10px 4px 6px;
 }
-
 #header h1 {
-  font-family: "Times New Roman", serif;
-  font-size: 36px;
-  color: #800000;
-  letter-spacing: 2px;
-  text-shadow: 2px 2px 0 #ccc;
-  line-height: 1;
+  font-family: "Times New Roman", serif; font-size: 36px; color: #800000;
+  letter-spacing: 2px; text-shadow: 2px 2px 0 #ccc; line-height: 1;
 }
-
-#header .tagline {
-  font-size: 11px;
-  color: #888;
-  margin-top: 2px;
-  font-style: italic;
-}
+#header .tagline { font-size: 11px; color: #888; margin-top: 2px; font-style: italic; }
 
 #boardnav {
-  background: #ffffee;
-  border-bottom: 1px solid #800000;
-  padding: 4px 8px;
-  font-size: 12px;
-  text-align: center;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: #ffffee; border-bottom: 1px solid #800000;
+  padding: 4px 8px; font-size: 12px; text-align: center;
+  display: flex; justify-content: space-between; align-items: center;
 }
-
 #boardnav-links { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; justify-content: center; flex: 1; }
 #boardnav-links span { margin: 0 2px; }
 #boardnav-links a {
@@ -70,55 +46,44 @@ a:hover { color: #dd0000; }
 #boardnav-links a:hover, #boardnav-links a.active {
   background: #800000; color: #fff; border-color: #600; text-decoration: none;
 }
-
-#userbar {
-  font-size: 11px;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
+#userbar { font-size: 11px; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
 #userbar a { font-size: 11px; }
 
-#wrap {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 8px 4px;
-}
+#wrap { max-width: 900px; margin: 0 auto; padding: 8px 4px; }
 
 .board-title-bar {
-  background: #800000; color: #fff; padding: 3px 8px;
-  font-weight: bold; font-size: 13px; margin-bottom: 8px;
-  display: flex; justify-content: space-between; align-items: center;
+  background: #800000; color: #fff; padding: 3px 8px; font-weight: bold;
+  font-size: 13px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
 }
 .board-title-bar a { color: #ffdddd; font-size: 11px; font-weight: normal; cursor: pointer; text-decoration: underline; }
 
-/* FORMS */
 #postform-wrap, #auth-wrap, #profile-wrap {
-  background: #ffffee; border: 1px solid #800000;
-  padding: 8px 12px; margin-bottom: 10px; display: none;
+  background: #ffffee; border: 1px solid #800000; padding: 8px 12px; margin-bottom: 10px; display: none;
 }
 #postform-wrap.open, #auth-wrap.open, #profile-wrap.open { display: block; }
-
 #postform-wrap h3, #auth-wrap h3, #profile-wrap h3 {
-  font-size: 13px; color: #800000; margin-bottom: 6px;
-  border-bottom: 1px solid #ccc; padding-bottom: 4px;
+  font-size: 13px; color: #800000; margin-bottom: 6px; border-bottom: 1px solid #ccc; padding-bottom: 4px;
 }
 
 .form-table { width: 100%; border-collapse: collapse; }
 .form-table td { padding: 3px 4px; vertical-align: top; }
 .form-table td:first-child { font-weight: bold; width: 80px; color: #555; font-size: 12px; padding-top: 5px; }
-.form-table input[type=text], .form-table input[type=password], .form-table textarea, .form-table select {
+.form-table input[type=text],
+.form-table input[type=password],
+.form-table input[type=file],
+.form-table textarea,
+.form-table select {
   font-family: Arial, sans-serif; font-size: 12px; border: 1px solid #aaa;
   padding: 2px 4px; background: #fff; width: 100%;
 }
+.form-table input[type=file] { background: #f5f5e8; padding: 2px; }
 .form-table textarea { height: 80px; resize: vertical; }
 
+.file-note { font-size: 10px; color: #888; margin-top: 2px; }
+
 .submit-btn {
-  background: #800000; color: #fff; border: 1px solid #600;
-  padding: 3px 14px; font-size: 12px; font-weight: bold;
-  cursor: pointer; font-family: Arial, sans-serif;
+  background: #800000; color: #fff; border: 1px solid #600; padding: 3px 14px;
+  font-size: 12px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif;
 }
 .submit-btn:hover { background: #a00000; }
 .submit-btn:disabled { background: #aaa; border-color: #999; cursor: default; }
@@ -127,7 +92,6 @@ a:hover { color: #dd0000; }
 .form-err { font-size: 11px; color: #cc0000; margin-top: 4px; display: none; }
 .form-err.show { display: block; }
 
-/* AUTH TABS */
 .auth-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
 .auth-tab {
   font-size: 12px; padding: 2px 10px; border: 1px solid #aaa;
@@ -135,9 +99,7 @@ a:hover { color: #dd0000; }
 }
 .auth-tab.active { background: #800000; color: #fff; border-color: #600; }
 
-/* THREADS */
 .thread { margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dotted #aaa; }
-
 .thread-op { background: #f0e0d6; border: 1px solid #d9bfb7; padding: 4px 6px; }
 
 .post-header { margin-bottom: 3px; line-height: 1.4; }
@@ -153,6 +115,22 @@ a:hover { color: #dd0000; }
 .post-body { font-size: 13px; line-height: 1.6; margin: 4px 0; word-break: break-word; white-space: pre-wrap; }
 .greentext { color: #789922; }
 
+/* FILE DISPLAY */
+.post-file { margin: 4px 0 6px 0; }
+.post-file img {
+  max-width: 250px; max-height: 250px; display: block;
+  border: 1px solid #aaa; cursor: pointer;
+}
+.post-file img.expanded { max-width: 100%; max-height: none; }
+.post-file video {
+  max-width: 400px; display: block; border: 1px solid #aaa;
+}
+.post-file audio { display: block; margin: 2px 0; width: 300px; }
+.post-file .file-link {
+  font-size: 11px; color: #34345c; display: block; margin-bottom: 2px;
+}
+.post-file .file-size { font-size: 10px; color: #888; }
+
 .post-actions { margin-top: 4px; font-size: 11px; color: #888; }
 .post-actions a { font-size: 11px; margin-right: 8px; }
 
@@ -164,20 +142,25 @@ a:hover { color: #dd0000; }
   padding: 4px 6px; margin-top: 4px; display: inline-block; width: 100%;
 }
 
-.reply-input-row { display: flex; gap: 4px; margin-top: 6px; padding-left: 20px; }
+.reply-input-row { display: flex; gap: 4px; margin-top: 6px; padding-left: 20px; flex-direction: column; }
+.reply-input-controls { display: flex; gap: 4px; }
 .reply-input-row textarea {
   flex: 1; font-family: Arial, sans-serif; font-size: 12px;
   border: 1px solid #aaa; padding: 3px 5px; background: #fff; height: 50px; resize: vertical;
 }
-.reply-input-row button {
-  background: #34345c; color: #fff; border: 1px solid #222;
-  padding: 0 10px; font-size: 11px; font-family: Arial, sans-serif;
-  cursor: pointer; font-weight: bold; align-self: flex-start; height: 26px;
+.reply-file-input { font-size: 11px; border: 1px solid #aaa; background: #f5f5e8; padding: 2px; font-family: Arial, sans-serif; }
+.reply-post-btn {
+  background: #34345c; color: #fff; border: 1px solid #222; padding: 0 10px;
+  font-size: 11px; font-family: Arial, sans-serif; cursor: pointer; font-weight: bold; height: 26px;
 }
-.reply-input-row button:hover { background: #555; }
-.reply-input-row button:disabled { background: #aaa; cursor: default; }
+.reply-post-btn:hover { background: #555; }
+.reply-post-btn:disabled { background: #aaa; cursor: default; }
 
 .omitted { font-size: 11px; color: #888; padding-left: 20px; margin-top: 3px; font-style: italic; }
+
+/* UPLOAD PROGRESS */
+.upload-progress { font-size: 11px; color: #800000; margin-top: 3px; display: none; }
+.upload-progress.show { display: block; }
 
 #statsbar {
   background: #ffffee; border: 1px solid #ccc; padding: 3px 8px;
@@ -190,20 +173,23 @@ a:hover { color: #dd0000; }
 }
 .rules-box b { color: #800000; }
 
-/* PROFILE */
-.profile-box {
-  background: #f0e0d6; border: 1px solid #d9bfb7; padding: 8px 10px; margin-bottom: 8px;
-}
+.profile-box { background: #f0e0d6; border: 1px solid #d9bfb7; padding: 8px 10px; margin-bottom: 8px; }
 .profile-stat { font-size: 12px; margin-bottom: 3px; }
 .profile-stat b { color: #34345c; }
-.profile-posts { margin-top: 8px; }
 .profile-post-item {
-  background: #ffffee; border: 1px solid #ccc; padding: 4px 6px;
-  margin-bottom: 4px; font-size: 12px;
+  background: #ffffee; border: 1px solid #ccc; padding: 4px 6px; margin-bottom: 4px; font-size: 12px;
 }
 .profile-post-item .pp-subject { color: #cc1105; font-weight: bold; }
 .profile-post-item .pp-time { color: #888; font-size: 11px; }
 .profile-post-item .pp-preview { color: #333; margin-top: 2px; font-size: 12px; }
+
+/* LIGHTBOX */
+#lightbox {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  z-index: 999; align-items: center; justify-content: center; cursor: pointer;
+}
+#lightbox.open { display: flex; }
+#lightbox img { max-width: 95vw; max-height: 95vh; border: 2px solid #fff; }
 
 #footer {
   text-align: center; padding: 12px 4px 20px; font-size: 11px;
@@ -236,7 +222,7 @@ a:hover { color: #dd0000; }
   </div>
   <div id="userbar">
     <span id="userbar-guest">[ <a onclick="openAuth('login')">login</a> / <a onclick="openAuth('register')">register</a> ]</span>
-    <span id="userbar-loggedin" style="display:none">[ <a onclick="openProfile()">profile</a> | <a onclick="logout()">logout</a> ]</span>
+    <span id="userbar-loggedin" style="display:none"></span>
   </div>
 </div>
 
@@ -248,7 +234,7 @@ a:hover { color: #dd0000; }
     Total threads: <b id="stat-threads">0</b>
   </div>
 
-  <!-- AUTH FORM -->
+  <!-- AUTH -->
   <div id="auth-wrap">
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login-btn" onclick="switchAuthTab('login')">Login</button>
@@ -287,15 +273,14 @@ a:hover { color: #dd0000; }
       <div class="profile-stat">Member since: <b id="profile-since"></b></div>
       <div class="profile-stat">Total posts: <b id="profile-postcount"></b></div>
     </div>
-    <div class="profile-posts">
-      <b style="font-size:12px;color:#800000">recent posts</b>
+    <div><b style="font-size:12px;color:#800000">recent threads</b>
       <div id="profile-posts-list" style="margin-top:6px"></div>
     </div>
     <div style="margin-top:8px"><span class="form-note">[<a onclick="closeProfile()">close</a>]</span></div>
   </div>
 
   <div class="rules-box">
-    <b>Rules:</b> No real names / doxxing. No illegal content. No raids. Mark NSFW. Mods sleep, report wisely.
+    <b>Rules:</b> No real names / doxxing. No illegal content. No raids. Mark NSFW. Max file size 50MB.
     &nbsp;&nbsp;<b>[ <a onclick="toggleForm()">+ New Thread</a> ]</b>
   </div>
 
@@ -319,8 +304,16 @@ a:hover { color: #dd0000; }
       </tr>
       <tr><td>Subject</td><td><input type="text" id="new-title" style="width:100%"></td></tr>
       <tr><td>Comment</td><td><textarea id="new-content"></textarea></td></tr>
+      <tr>
+        <td>File</td>
+        <td>
+          <input type="file" id="new-file" accept="image/*,video/*,audio/*,.gif,.webm,.mp4,.mp3,.wav,.ogg,.flac">
+          <div class="file-note">jpg, png, gif, webp, mp4, webm, mp3, wav, ogg, flac &mdash; max 50MB</div>
+          <div class="upload-progress" id="new-upload-progress">uploading...</div>
+        </td>
+      </tr>
       <tr><td></td><td>
-        <button class="submit-btn" onclick="submitThread()">Submit</button>
+        <button class="submit-btn" id="new-submit-btn" onclick="submitThread()">Submit</button>
         &nbsp;<span class="form-note">[<a onclick="toggleForm()">close</a>]</span>
       </td></tr>
     </table>
@@ -345,21 +338,36 @@ a:hover { color: #dd0000; }
 
 </div>
 
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="">
+</div>
+
 <script>
 var SUPABASE_URL = 'https://actpttkngkmjmzhukxva.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_c7jHjcNicXKabcFPCzKjyA_ViTc0-ti';
+var STORAGE_URL = SUPABASE_URL + '/storage/v1/object/public/uploads/';
 
 var currentBoard = 'all';
 var currentSort = 'bump';
 var threads = [];
-var currentUser = null; // { id, username, created_at }
+var currentUser = null;
 
 var boardNames = {
   b: '/b/ - Random', tech: '/tech/ - Technology', g: '/g/ - Gaming',
   a: '/a/ - Anime', sci: '/sci/ - Science', pol: '/pol/ - Politics', fit: '/fit/ - Fitness'
 };
 
-// ── SUPABASE ─────────────────────────────────────────────────────────────────
+var ALLOWED_TYPES = {
+  'image/jpeg': 'image', 'image/png': 'image', 'image/gif': 'image',
+  'image/webp': 'image', 'image/bmp': 'image',
+  'video/mp4': 'video', 'video/webm': 'video', 'video/ogg': 'video',
+  'audio/mpeg': 'audio', 'audio/mp3': 'audio', 'audio/wav': 'audio',
+  'audio/ogg': 'audio', 'audio/flac': 'audio', 'audio/x-flac': 'audio',
+  'audio/aac': 'audio'
+};
+
+// ── SUPABASE ──────────────────────────────────────────────────────────────────
 async function sbGet(path) {
   var r = await fetch(SUPABASE_URL+'/rest/v1/'+path, {
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY }
@@ -391,7 +399,36 @@ async function sbPatch(table, id, body) {
   });
 }
 
-// ── SESSION ──────────────────────────────────────────────────────────────────
+async function uploadFile(file, progressEl) {
+  if (!file) return null;
+  var maxSize = 50 * 1024 * 1024;
+  if (file.size > maxSize) { alert('File too large. Max 50MB.'); return null; }
+  var mime = file.type;
+  if (!ALLOWED_TYPES[mime]) { alert('File type not allowed: ' + mime); return null; }
+
+  if (progressEl) { progressEl.textContent = 'uploading...'; progressEl.classList.add('show'); }
+
+  var ext = file.name.split('.').pop().toLowerCase();
+  var filename = Date.now() + '_' + Math.random().toString(36).slice(2) + '.' + ext;
+
+  var r = await fetch(SUPABASE_URL+'/storage/v1/object/uploads/'+filename, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer '+SUPABASE_KEY,
+      'Content-Type': mime,
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+
+  if (progressEl) progressEl.classList.remove('show');
+
+  if (!r.ok) { alert('Upload failed. Check your storage bucket is public.'); return null; }
+  return { url: STORAGE_URL + filename, type: ALLOWED_TYPES[mime] };
+}
+
+// ── SESSION ───────────────────────────────────────────────────────────────────
 function saveSession(user) {
   localStorage.setItem('wchan_user', JSON.stringify(user));
   currentUser = user;
@@ -424,7 +461,7 @@ function updateUserbar() {
   }
 }
 
-// ── AUTH ─────────────────────────────────────────────────────────────────────
+// ── AUTH ──────────────────────────────────────────────────────────────────────
 function openAuth(tab) {
   document.getElementById('auth-wrap').classList.add('open');
   document.getElementById('profile-wrap').classList.remove('open');
@@ -432,9 +469,7 @@ function openAuth(tab) {
   switchAuthTab(tab || 'login');
 }
 
-function closeAuth() {
-  document.getElementById('auth-wrap').classList.remove('open');
-}
+function closeAuth() { document.getElementById('auth-wrap').classList.remove('open'); }
 
 function switchAuthTab(tab) {
   document.getElementById('auth-login').style.display = tab === 'login' ? '' : 'none';
@@ -449,12 +484,10 @@ async function doLogin() {
   var err = document.getElementById('login-err');
   err.classList.remove('show');
   if (!username || !password) { err.textContent = 'fill in all fields.'; err.classList.add('show'); return; }
-
   var rows = await sbGet('users?username=eq.'+encodeURIComponent(username)+'&select=id,username,password,created_at');
   if (!rows || rows.length === 0) { err.textContent = 'username not found.'; err.classList.add('show'); return; }
   var user = rows[0];
   if (user.password !== btoa(password)) { err.textContent = 'wrong password.'; err.classList.add('show'); return; }
-
   saveSession({ id: user.id, username: user.username, created_at: user.created_at });
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
@@ -467,18 +500,14 @@ async function doRegister() {
   var password2 = document.getElementById('reg-pass2').value;
   var err = document.getElementById('reg-err');
   err.classList.remove('show');
-
   if (!username || !password) { err.textContent = 'fill in all fields.'; err.classList.add('show'); return; }
   if (username.length < 3) { err.textContent = 'username must be at least 3 characters.'; err.classList.add('show'); return; }
   if (password.length < 4) { err.textContent = 'password must be at least 4 characters.'; err.classList.add('show'); return; }
   if (password !== password2) { err.textContent = 'passwords do not match.'; err.classList.add('show'); return; }
-
   var existing = await sbGet('users?username=eq.'+encodeURIComponent(username)+'&select=id');
   if (existing && existing.length > 0) { err.textContent = 'username already taken.'; err.classList.add('show'); return; }
-
   var saved = await sbPost('users', { username: username, password: btoa(password) });
-  if (!saved || !saved.id) { err.textContent = 'error creating account. try again.'; err.classList.add('show'); return; }
-
+  if (!saved || !saved.id) { err.textContent = 'error creating account.'; err.classList.add('show'); return; }
   saveSession({ id: saved.id, username: saved.username, created_at: saved.created_at });
   document.getElementById('reg-user').value = '';
   document.getElementById('reg-pass').value = '';
@@ -486,22 +515,19 @@ async function doRegister() {
   closeAuth();
 }
 
-// ── PROFILE ──────────────────────────────────────────────────────────────────
+// ── PROFILE ───────────────────────────────────────────────────────────────────
 async function openProfile() {
   if (!currentUser) { openAuth('login'); return; }
   document.getElementById('profile-wrap').classList.add('open');
   document.getElementById('auth-wrap').classList.remove('open');
   document.getElementById('postform-wrap').classList.remove('open');
-
   document.getElementById('profile-title').textContent = 'profile: '+currentUser.username;
   document.getElementById('profile-username').textContent = currentUser.username;
   document.getElementById('profile-since').textContent = fmtTime(new Date(currentUser.created_at).getTime());
-
   var userThreads = await sbGet('threads?user_id=eq.'+currentUser.id+'&order=created_at.desc&limit=10');
-  var userReplies = await sbGet('replies?user_id=eq.'+currentUser.id+'&select=id&limit=1000');
-  var totalPosts = (userThreads ? userThreads.length : 0) + (userReplies ? userReplies.length : 0);
-  document.getElementById('profile-postcount').textContent = totalPosts;
-
+  var userReplies = await sbGet('replies?user_id=eq.'+currentUser.id+'&select=id');
+  document.getElementById('profile-postcount').textContent =
+    ((userThreads||[]).length + (userReplies||[]).length).toLocaleString();
   var list = document.getElementById('profile-posts-list');
   list.innerHTML = '';
   if (!userThreads || userThreads.length === 0) {
@@ -513,38 +539,38 @@ async function openProfile() {
       el.innerHTML = '<span class="pp-subject">'+escHtml(t.subject)+'</span>'
         +' <span style="font-size:11px;color:#888">['+escHtml(t.board)+']</span>'
         +' <span class="pp-time">'+fmtTime(new Date(t.created_at).getTime())+'</span>'
-        +'<div class="pp-preview">'+escHtml((t.body||'').slice(0,120))+(t.body && t.body.length > 120 ? '...' : '')+'</div>';
+        +'<div class="pp-preview">'+escHtml((t.body||'').slice(0,120))+(t.body&&t.body.length>120?'...':'')+'</div>';
       list.appendChild(el);
     });
   }
 }
 
-function closeProfile() {
-  document.getElementById('profile-wrap').classList.remove('open');
-}
+function closeProfile() { document.getElementById('profile-wrap').classList.remove('open'); }
 
-// ── LOAD ─────────────────────────────────────────────────────────────────────
+// ── LOAD ──────────────────────────────────────────────────────────────────────
 async function loadAll() {
   var feed = document.getElementById('thread-feed');
   feed.innerHTML = '<i style="color:#888;font-size:12px">loading...</i>';
-
   var rawThreads = await sbGet('threads?order=bump.desc');
   var rawReplies = await sbGet('replies?order=created_at.asc');
-
   threads = (rawThreads||[]).map(function(t) {
     return {
       id: t.id, board: t.board, subject: t.subject, body: t.body,
-      name: t.name || 'Anonymous', registered: !!t.user_id,
+      name: t.name||'Anonymous', registered: !!t.user_id,
+      file_url: t.file_url||null, file_type: t.file_type||null,
       time: new Date(t.created_at).getTime(),
-      bump: t.bump || new Date(t.created_at).getTime(),
-      replies: (rawReplies||[]).filter(function(r){ return r.thread_id === t.id; }).map(function(r){
-        return { id: r.id, name: r.name || 'Anonymous', registered: !!r.user_id, body: r.body, time: new Date(r.created_at).getTime() };
+      bump: t.bump||new Date(t.created_at).getTime(),
+      replies: (rawReplies||[]).filter(function(r){ return r.thread_id===t.id; }).map(function(r){
+        return {
+          id: r.id, name: r.name||'Anonymous', registered: !!r.user_id,
+          body: r.body, file_url: r.file_url||null, file_type: r.file_type||null,
+          time: new Date(r.created_at).getTime()
+        };
       })
     };
   });
-
   renderFeed();
-  var total = threads.reduce(function(n,t){ return n+t.replies.length; }, 0) + threads.length;
+  var total = threads.reduce(function(n,t){ return n+t.replies.length; },0)+threads.length;
   document.getElementById('stat-posts').textContent = total.toLocaleString();
   document.getElementById('stat-threads').textContent = threads.length.toLocaleString();
 }
@@ -555,7 +581,7 @@ function fmtTime(ts) {
   var mo = d.getMonth()+1, dy = d.getDate(), yr = String(d.getFullYear()).slice(-2);
   var hh = d.getHours(), mm = ('0'+d.getMinutes()).slice(-2), ss = ('0'+d.getSeconds()).slice(-2);
   var ampm = hh >= 12 ? 'PM' : 'AM';
-  hh = hh % 12 || 12;
+  hh = hh%12||12;
   return mo+'/'+dy+'/'+yr+' '+hh+':'+mm+':'+ss+' '+ampm;
 }
 
@@ -565,7 +591,7 @@ function escHtml(s) {
 
 function renderBody(text) {
   return escHtml(text).split('\n').map(function(line) {
-    if (line.charAt(0) === '&' && line.slice(0,4) === '&gt;') return '<span class="greentext">'+line+'</span>';
+    if (line.charAt(0)==='&'&&line.slice(0,4)==='&gt;') return '<span class="greentext">'+line+'</span>';
     return line;
   }).join('<br>');
 }
@@ -574,11 +600,27 @@ function nameHtml(name, registered) {
   return '<span class="post-name'+(registered?' registered':'')+'">'+escHtml(name)+'</span>';
 }
 
+function fileHtml(url, type, filename) {
+  if (!url || !type) return '';
+  var fname = filename || url.split('/').pop();
+  var html = '<div class="post-file">';
+  html += '<a class="file-link" href="'+escHtml(url)+'" target="_blank">'+escHtml(fname)+'</a>';
+  if (type === 'image') {
+    html += '<img src="'+escHtml(url)+'" onclick="openLightbox(\''+escHtml(url)+'\')" title="click to expand">';
+  } else if (type === 'video') {
+    html += '<video controls preload="metadata"><source src="'+escHtml(url)+'">your browser does not support video.</video>';
+  } else if (type === 'audio') {
+    html += '<audio controls preload="metadata"><source src="'+escHtml(url)+'">your browser does not support audio.</audio>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function getSortedThreads() {
-  var list = currentBoard === 'all' ? threads.slice() : threads.filter(function(t){ return t.board === currentBoard; });
-  if (currentSort === 'bump') list.sort(function(a,b){ return b.bump - a.bump; });
-  else if (currentSort === 'new') list.sort(function(a,b){ return b.time - a.time; });
-  else if (currentSort === 'replies') list.sort(function(a,b){ return b.replies.length - a.replies.length; });
+  var list = currentBoard==='all' ? threads.slice() : threads.filter(function(t){ return t.board===currentBoard; });
+  if (currentSort==='bump') list.sort(function(a,b){ return b.bump-a.bump; });
+  else if (currentSort==='new') list.sort(function(a,b){ return b.time-a.time; });
+  else if (currentSort==='replies') list.sort(function(a,b){ return b.replies.length-a.replies.length; });
   return list;
 }
 
@@ -586,13 +628,13 @@ function renderFeed() {
   var feed = document.getElementById('thread-feed');
   feed.innerHTML = '';
   var list = getSortedThreads();
-  if (list.length === 0) {
+  if (list.length===0) {
     feed.innerHTML = '<div style="color:#888;font-size:12px;padding:10px 0">no threads yet.</div>';
   } else {
     list.forEach(function(t){ feed.appendChild(buildThread(t)); });
   }
   document.getElementById('board-title-text').textContent =
-    currentBoard === 'all' ? '/all/ \u2014 All Boards' : boardNames[currentBoard];
+    currentBoard==='all' ? '/all/ \u2014 All Boards' : boardNames[currentBoard];
 }
 
 function buildThread(t) {
@@ -605,10 +647,11 @@ function buildThread(t) {
 
   var repliesHtml = showReplies.map(function(r){
     return '<div class="reply-post" id="post-'+r.id+'">'
-      +'<div class="post-header">'+nameHtml(r.name, r.registered)+' '
+      +'<div class="post-header">'+nameHtml(r.name,r.registered)+' '
       +'<span class="post-time">'+fmtTime(r.time)+'</span> '
       +'<span class="post-no">No.<a onclick="quotePost('+t.id+','+r.id+')">'+r.id+'</a></span>'
       +'</div>'
+      +fileHtml(r.file_url, r.file_type)
       +'<div class="post-body">'+renderBody(r.body)+'</div>'
       +'</div>';
   }).join('');
@@ -620,11 +663,12 @@ function buildThread(t) {
   div.innerHTML = '<div class="thread-op">'
     +'<div class="post-header">'
     +'<span class="post-subject">'+escHtml(t.subject)+'</span>&nbsp; '
-    +nameHtml(t.name, t.registered)+'&nbsp; '
+    +nameHtml(t.name,t.registered)+'&nbsp; '
     +'<span class="post-time">'+fmtTime(t.time)+'</span>&nbsp; '
     +'<span class="post-no">No.<a onclick="quotePost('+t.id+','+t.id+')">'+t.id+'</a></span>&nbsp;'
     +'<span style="font-size:11px;color:#888;">['+escHtml(t.board)+']</span>'
     +'</div>'
+    +fileHtml(t.file_url, t.file_type)
     +'<div class="post-body">'+renderBody(t.body)+'</div>'
     +'<div class="post-actions">'
     +'[<a id="rc-'+t.id+'" onclick="toggleReplies('+t.id+')">'+t.replies.length+' repl'+(t.replies.length===1?'y':'ies')+'</a>]&nbsp;&nbsp;'
@@ -635,7 +679,11 @@ function buildThread(t) {
     +'<div class="replies" id="replies-'+t.id+'">'+repliesHtml+'</div>'
     +'<div class="reply-input-row" id="replyrow-'+t.id+'" style="display:none">'
     +'<textarea id="reply-input-'+t.id+'"></textarea>'
-    +'<button onclick="submitReply('+t.id+')">Post</button>'
+    +'<div class="reply-input-controls">'
+    +'<input type="file" class="reply-file-input" id="reply-file-'+t.id+'" accept="image/*,video/*,audio/*,.gif,.webm,.mp4,.mp3,.wav,.ogg,.flac">'
+    +'<button class="reply-post-btn" onclick="submitReply('+t.id+')">Post</button>'
+    +'</div>'
+    +'<div class="upload-progress" id="reply-progress-'+t.id+'">uploading...</div>'
     +'</div>';
 
   return div;
@@ -660,23 +708,41 @@ function quotePost(threadId, postId) {
 
 async function submitReply(id) {
   var inp = document.getElementById('reply-input-'+id);
+  var fileInput = document.getElementById('reply-file-'+id);
+  var progressEl = document.getElementById('reply-progress-'+id);
   var text = inp.value.trim();
-  if (!text) return;
+  var file = fileInput && fileInput.files[0];
+  if (!text && !file) return;
 
-  var btn = inp.nextElementSibling;
+  var btn = document.querySelector('#replyrow-'+id+' .reply-post-btn');
   btn.disabled = true; btn.textContent = '...';
 
-  var postData = { thread_id: id, body: text, name: currentUser ? currentUser.username : 'Anonymous' };
+  var fileResult = null;
+  if (file) {
+    fileResult = await uploadFile(file, progressEl);
+    if (!fileResult && file) { btn.disabled = false; btn.textContent = 'Post'; return; }
+  }
+
+  var postData = {
+    thread_id: id, body: text || '',
+    name: currentUser ? currentUser.username : 'Anonymous'
+  };
   if (currentUser) postData.user_id = currentUser.id;
+  if (fileResult) { postData.file_url = fileResult.url; postData.file_type = fileResult.type; }
 
   var saved = await sbPost('replies', postData);
   await sbPatch('threads', id, { bump: Date.now() });
 
   var t = threads.find(function(x){ return x.id===id; });
-  var reply = { id: saved.id, name: postData.name, registered: !!currentUser, body: text, time: new Date(saved.created_at).getTime() };
+  var reply = {
+    id: saved.id, name: postData.name, registered: !!currentUser,
+    body: text||'', file_url: postData.file_url||null, file_type: postData.file_type||null,
+    time: new Date(saved.created_at).getTime()
+  };
   t.replies.push(reply);
   t.bump = Date.now();
   inp.value = '';
+  if (fileInput) fileInput.value = '';
   btn.disabled = false; btn.textContent = 'Post';
 
   var list = document.getElementById('replies-'+id);
@@ -686,6 +752,7 @@ async function submitReply(id) {
     +'<span class="post-time">'+fmtTime(reply.time)+'</span> '
     +'<span class="post-no">No.<a onclick="quotePost('+id+','+reply.id+')">'+reply.id+'</a></span>'
     +'</div>'
+    +fileHtml(reply.file_url, reply.file_type)
     +'<div class="post-body">'+renderBody(reply.body)+'</div>'
     +'</div>';
   list.appendChild(tmp.firstElementChild);
@@ -716,22 +783,33 @@ async function submitThread() {
   var subject = document.getElementById('new-title').value.trim();
   var body = document.getElementById('new-content').value.trim();
   var board = document.getElementById('new-board').value;
+  var fileInput = document.getElementById('new-file');
+  var file = fileInput && fileInput.files[0];
   if (!subject || !body) { alert('Subject and comment required.'); return; }
 
-  var btn = document.querySelector('#postform-wrap .submit-btn');
+  var btn = document.getElementById('new-submit-btn');
+  var progressEl = document.getElementById('new-upload-progress');
   btn.disabled = true; btn.textContent = 'Posting...';
+
+  var fileResult = null;
+  if (file) {
+    fileResult = await uploadFile(file, progressEl);
+    if (!fileResult) { btn.disabled = false; btn.textContent = 'Submit'; return; }
+  }
 
   var postData = {
     board: board, subject: subject, body: body, bump: Date.now(),
     name: currentUser ? currentUser.username : 'Anonymous'
   };
   if (currentUser) postData.user_id = currentUser.id;
+  if (fileResult) { postData.file_url = fileResult.url; postData.file_type = fileResult.type; }
 
   var saved = await sbPost('threads', postData);
 
   var t = {
     id: saved.id, board: board, subject: subject, body: body,
     name: postData.name, registered: !!currentUser,
+    file_url: postData.file_url||null, file_type: postData.file_type||null,
     time: new Date(saved.created_at).getTime(), bump: saved.bump, replies: []
   };
   threads.unshift(t);
@@ -739,6 +817,7 @@ async function submitThread() {
 
   document.getElementById('new-title').value = '';
   document.getElementById('new-content').value = '';
+  if (fileInput) fileInput.value = '';
   document.getElementById('postform-wrap').classList.remove('open');
   btn.disabled = false; btn.textContent = 'Submit';
   document.getElementById('stat-threads').textContent = threads.length.toLocaleString();
@@ -751,11 +830,23 @@ async function submitThread() {
 
 function reportThread(id) { alert('Thread No.'+id+' reported. Mods notified.'); }
 
+// ── LIGHTBOX ──────────────────────────────────────────────────────────────────
+function openLightbox(url) {
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-img').src = '';
+}
+
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.getElementById('postform-wrap').classList.remove('open');
     document.getElementById('auth-wrap').classList.remove('open');
     document.getElementById('profile-wrap').classList.remove('open');
+    closeLightbox();
   }
 });
 
